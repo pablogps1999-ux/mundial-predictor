@@ -85,6 +85,18 @@
     backdrop-filter: blur(4px);
   }
 
+  .aviso-gemini{
+    margin-top: 18px;
+    padding: 10px 14px;
+    background: rgba(212,175,55,0.08);
+    border: 1px solid rgba(212,175,55,0.3);
+    border-radius: 8px;
+    font-size: 0.73rem;
+    line-height: 1.5;
+    opacity: 0.8;
+    color: var(--crema);
+  }
+
   .tarjeta-inicio h1{
     font-size: 2.4rem;
     letter-spacing: 2px;
@@ -774,6 +786,7 @@
     <button class="btn secundario" id="btn-continuar" style="display:none;" data-i18n="btn_continuar">Continuar mi predicción</button>
     <button class="btn secundario" id="btn-partido-suelto" data-i18n="btn_partido_suelto">🔍 Adivinar partido en específico</button>
     <div id="estado-guardado"></div>
+    <div class="aviso-gemini" data-i18n="aviso_gemini">⚠️ La IA usada es Gemini (Google). Si el análisis falla, puede deberse a saturación del servicio — espera unos minutos e intenta de nuevo.</div>
   </div>
 </div>
 
@@ -974,7 +987,9 @@ Cada array debe tener exactamente el número de partidos de esa ronda, en el mis
 [[[FIN_JSON_RESULTADOS]]]
 
 r1_index es la posición del partido en la lista que te doy (empezando en 0). ganador_code es el código del equipo que ganó. marcador es el resultado final en formato "X-Y" a favor del ganador (si fue por penales, agrega eso, ej "1-1 (4-3 pen)").`,
-      prompt_usuario_actualidad: (lista)=> `Aquí está la lista de los partidos de dieciseisavos de final del Mundial 2026, en orden (índice 0 en adelante):\n\n${lista}\n\nBusca cuáles ya se jugaron en la realidad y dame el JSON con los resultados reales.`
+      prompt_usuario_actualidad: (lista)=> `Aquí está la lista de los partidos de dieciseisavos de final del Mundial 2026, en orden (índice 0 en adelante):\n\n${lista}\n\nBusca cuáles ya se jugaron en la realidad y dame el JSON con los resultados reales.`,
+      aviso_gemini: "⚠️ La IA usada es Gemini (Google). Si el análisis falla, puede deberse a saturación del servicio — espera unos minutos e intenta de nuevo.",
+      error_analisis: "No se pudo generar el análisis. Gemini puede estar saturado en este momento — espera unos minutos e inténtalo de nuevo. Las probabilidades aparecerán cuando el análisis complete exitosamente."
     },
     en: {
       titulo_h1_pre: "World Cup ",
@@ -1045,7 +1060,9 @@ Each array must have exactly the number of matches in that round, in the same or
 [[[FIN_JSON_RESULTADOS]]]
 
 r1_index is the position of the match in the list given to you (starting at 0). ganador_code is the code of the team that won. marcador is the final score in "X-Y" format favoring the winner (if decided by penalties, add that, e.g. "1-1 (4-3 pen)").`,
-      prompt_usuario_actualidad: (lista)=> `Here is the list of World Cup 2026 round-of-32 matches, in order (index 0 onward):\n\n${lista}\n\nFind which ones have already been played in reality and give me the JSON with the real results.`
+      prompt_usuario_actualidad: (lista)=> `Here is the list of World Cup 2026 round-of-32 matches, in order (index 0 onward):\n\n${lista}\n\nFind which ones have already been played in reality and give me the JSON with the real results.`,
+      aviso_gemini: "⚠️ This app uses Gemini (Google) for AI analysis. If the analysis fails, it may be due to service overload — wait a few minutes and try again.",
+      error_analisis: "The analysis couldn't be generated. Gemini may be overloaded right now — wait a few minutes and try again. Probabilities will appear once the analysis completes successfully."
     },
     fr: {
       titulo_h1_pre: "Pronostic ",
@@ -1116,7 +1133,9 @@ Chaque tableau doit avoir exactement le nombre de matchs de ce tour, dans le mê
 [[[FIN_JSON_RESULTADOS]]]
 
 r1_index est la position du match dans la liste fournie (en commençant à 0). ganador_code est le code de l'équipe gagnante. marcador est le score final au format "X-Y" en faveur du gagnant (si décidé aux tirs au but, ajoute-le, ex "1-1 (4-3 tab)").`,
-      prompt_usuario_actualidad: (lista)=> `Voici la liste des matchs de 32e de finale de la Coupe du Monde 2026, dans l'ordre (index 0 et suivants) :\n\n${lista}\n\nTrouve lesquels ont déjà été joués dans la réalité et donne-moi le JSON avec les résultats réels.`
+      prompt_usuario_actualidad: (lista)=> `Voici la liste des matchs de 32e de finale de la Coupe du Monde 2026, dans l'ordre (index 0 et suivants) :\n\n${lista}\n\nTrouve lesquels ont déjà été joués dans la réalité et donne-moi le JSON avec les résultats réels.`,
+      aviso_gemini: "⚠️ Cette app utilise Gemini (Google) pour l'analyse IA. Si l'analyse échoue, cela peut être dû à une surcharge du service — attends quelques minutes et réessaie.",
+      error_analisis: "L'analyse n'a pas pu être générée. Gemini est peut-être surchargé en ce moment — attends quelques minutes et réessaie. Les probabilités apparaîtront quand l'analyse sera complétée avec succès."
     },
     pt: {
       titulo_h1_pre: "Predição ",
@@ -1187,7 +1206,9 @@ Cada array deve ter exatamente o número de partidas dessa rodada, na mesma orde
 [[[FIN_JSON_RESULTADOS]]]
 
 r1_index é a posição da partida na lista fornecida (começando em 0). ganador_code é o código do time vencedor. marcador é o placar final no formato "X-Y" a favor do vencedor (se decidido nos pênaltis, adicione isso, ex "1-1 (4-3 pen)").`,
-      prompt_usuario_actualidad: (lista)=> `Aqui está a lista das partidas de dezesseis avos de final da Copa do Mundo 2026, em ordem (índice 0 em diante):\n\n${lista}\n\nBusque quais já foram disputadas na realidade e me dê o JSON com os resultados reais.`
+      prompt_usuario_actualidad: (lista)=> `Aqui está a lista das partidas de dezesseis avos de final da Copa do Mundo 2026, em ordem (índice 0 em diante):\n\n${lista}\n\nBusque quais já foram disputadas na realidade e me dê o JSON com os resultados reais.`,
+      aviso_gemini: "⚠️ Este app usa Gemini (Google) para análise de IA. Se a análise falhar, pode ser por sobrecarga do serviço — aguarde alguns minutos e tente novamente.",
+      error_analisis: "Não foi possível gerar a análise. O Gemini pode estar sobrecarregado agora — aguarde alguns minutos e tente novamente. As probabilidades aparecerão quando a análise for concluída com sucesso."
     },
     de: {
       titulo_h1_pre: "WM-",
@@ -1258,7 +1279,9 @@ Jedes Array muss genau die Anzahl der Spiele dieser Runde haben, in derselben Re
 [[[FIN_JSON_RESULTADOS]]]
 
 r1_index ist die Position des Spiels in der übergebenen Liste (beginnend bei 0). ganador_code ist der Code der siegreichen Mannschaft. marcador ist das Endergebnis im Format "X-Y" zugunsten des Siegers (bei Elfmeterschießen ergänzen, z.B. "1-1 (4-3 i.E.)").`,
-      prompt_usuario_actualidad: (lista)=> `Hier ist die Liste der WM-2026-Spiele der Runde der letzten 32, in Reihenfolge (Index 0 aufwärts):\n\n${lista}\n\nFinde heraus, welche bereits in der Realität gespielt wurden, und gib mir das JSON mit den echten Ergebnissen.`
+      prompt_usuario_actualidad: (lista)=> `Hier ist die Liste der WM-2026-Spiele der Runde der letzten 32, in Reihenfolge (Index 0 aufwärts):\n\n${lista}\n\nFinde heraus, welche bereits in der Realität gespielt wurden, und gib mir das JSON mit den echten Ergebnissen.`,
+      aviso_gemini: "⚠️ Diese App verwendet Gemini (Google) für KI-Analysen. Wenn die Analyse fehlschlägt, kann es an einer Überlastung des Dienstes liegen — warte ein paar Minuten und versuche es erneut.",
+      error_analisis: "Die Analyse konnte nicht erstellt werden. Gemini ist möglicherweise gerade überlastet — warte ein paar Minuten und versuche es erneut. Die Wahrscheinlichkeiten erscheinen, sobald die Analyse erfolgreich abgeschlossen wurde."
     }
   };
 
@@ -2211,18 +2234,33 @@ r1_index ist die Position des Spiels in der übergebenen Liste (beginnend bei 0)
   }
 
   function extraerProbabilidades(textoCompleto){
+    // Intento 1: delimitadores exactos
     const regex = /\[\[\[JSON_PROBABILIDADES\]\]\]([\s\S]*?)\[\[\[FIN_JSON_PROBABILIDADES\]\]\]/;
     const match = textoCompleto.match(regex);
-    if(!match) return { textoSinJson: textoCompleto, probabilidades: null };
-
-    const textoSinJson = textoCompleto.replace(regex, "").trim();
-    try{
-      const json = JSON.parse(match[1].trim());
-      return { textoSinJson, probabilidades: json };
-    }catch(e){
-      console.error("No se pudo parsear el JSON de probabilidades:", e);
-      return { textoSinJson, probabilidades: null };
+    if(match){
+      const textoSinJson = textoCompleto.replace(regex, "").trim();
+      try{
+        const json = JSON.parse(match[1].trim());
+        return { textoSinJson, probabilidades: json };
+      }catch(e){}
     }
+
+    // Intento 2: buscar cualquier bloque JSON que tenga la clave "r1" con un array de números
+    const regexJson = /\{[\s\S]*?"r1"\s*:\s*\[[\d,\s]+\][\s\S]*?\}/g;
+    const matches = textoCompleto.match(regexJson);
+    if(matches){
+      for(const candidato of matches){
+        try{
+          const json = JSON.parse(candidato);
+          if(Array.isArray(json.r1) && json.r1.length > 0){
+            const textoSinJson = textoCompleto.replace(candidato, "").trim();
+            return { textoSinJson, probabilidades: json };
+          }
+        }catch(e){}
+      }
+    }
+
+    return { textoSinJson: textoCompleto, probabilidades: null };
   }
 
   function aplicarProbabilidades(probs){
