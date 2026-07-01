@@ -1,0 +1,2375 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Predicción Mundial 2026</title>
+<style>
+  :root{
+    --verde-cancha: #0d3b2e;
+    --verde-oscuro: #0a2e24;
+    --verde-claro: #1d5c47;
+    --crema: #f4f1e8;
+    --dorado: #d4af37;
+    --linea: rgba(244,241,232,0.35);
+    --sombra: rgba(0,0,0,0.35);
+  }
+
+  *{box-sizing:border-box;}
+
+  html,body{
+    margin:0;
+    padding:0;
+    background: var(--verde-oscuro);
+    font-family: 'Oswald', 'Arial Narrow', Arial, sans-serif;
+    color: var(--crema);
+    overflow-x:auto;
+  }
+
+  @font-face{
+    font-family:'Oswald';
+    src: local('Oswald');
+  }
+
+  /* ===== PANTALLA DE INICIO ===== */
+  #pantalla-inicio{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:
+      repeating-linear-gradient(135deg, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 2px, transparent 2px, transparent 14px),
+      radial-gradient(circle at 50% 0%, var(--verde-claro) 0%, var(--verde-oscuro) 70%);
+    text-align:center;
+    padding: 24px;
+    position: relative;
+  }
+
+  .selector-idioma{
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    background: rgba(244,241,232,0.08);
+    border: 1px solid var(--linea);
+    color: var(--crema);
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-family: inherit;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor:pointer;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  .selector-idioma:hover{ background: rgba(244,241,232,0.16); }
+  .selector-idioma option{
+    background: var(--verde-oscuro);
+    color: var(--crema);
+  }
+  #selector-idioma-bracket{
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  #selector-idioma-bracket option{
+    background: var(--verde-oscuro);
+    color: var(--crema);
+  }
+
+  .tarjeta-inicio{
+    background: rgba(13,59,46,0.6);
+    border: 1px solid var(--dorado);
+    border-radius: 18px;
+    padding: 48px 36px;
+    max-width: 480px;
+    backdrop-filter: blur(4px);
+  }
+
+  .tarjeta-inicio h1{
+    font-size: 2.4rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin: 0 0 8px;
+    color: var(--crema);
+    font-weight: 700;
+  }
+
+  .tarjeta-inicio h1 span{
+    color: var(--dorado);
+  }
+
+  .tarjeta-inicio p.sub{
+    opacity:0.75;
+    margin: 0 0 32px;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+  }
+
+  .btn{
+    display:block;
+    width:100%;
+    padding: 16px 20px;
+    margin-bottom: 14px;
+    background: var(--dorado);
+    color: var(--verde-oscuro);
+    border: none;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .btn:hover{ transform: translateY(-2px); box-shadow: 0 6px 14px var(--sombra); }
+  .btn:active{ transform: translateY(0); }
+
+  .btn.secundario{
+    background: transparent;
+    color: var(--crema);
+    border: 1.5px solid var(--linea);
+  }
+
+  .btn.peligro{
+    background: transparent;
+    color: #e08080;
+    border: 1.5px solid #e08080;
+    font-size: 0.8rem;
+    padding: 10px 16px;
+  }
+
+  #estado-guardado{
+    font-size: 0.85rem;
+    opacity: 0.6;
+    margin-top: 6px;
+  }
+
+  /* ===== HEADER DEL BRACKET ===== */
+  #pantalla-bracket{ display:none; }
+
+  .topbar{
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding: 14px 22px;
+    background: var(--verde-oscuro);
+    border-bottom: 1px solid var(--linea);
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .topbar h2{
+    margin:0;
+    font-size: 1.1rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .topbar h2 span{ color: var(--dorado); }
+
+  .topbar .acciones{
+    display:flex;
+    gap: 10px;
+    align-items:center;
+  }
+
+  .pill-btn{
+    background: rgba(244,241,232,0.08);
+    border: 1px solid var(--linea);
+    color: var(--crema);
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-family: inherit;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+    cursor:pointer;
+    text-transform: uppercase;
+  }
+  .pill-btn:hover{ background: rgba(244,241,232,0.16); }
+
+  .barra-progreso-wrap{
+    padding: 10px 22px 0;
+  }
+  .barra-progreso{
+    height: 6px;
+    background: rgba(244,241,232,0.12);
+    border-radius: 99px;
+    overflow:hidden;
+  }
+  .barra-progreso-fill{
+    height:100%;
+    background: var(--dorado);
+    width:0%;
+    transition: width 0.35s ease;
+  }
+  .progreso-texto{
+    font-size: 0.72rem;
+    opacity: 0.6;
+    margin-top: 4px;
+    text-align:right;
+    letter-spacing: 0.5px;
+  }
+
+  /* ===== ZONA DE BRACKET ===== */
+  .cancha{
+    min-width: 1500px;
+    padding: 30px 20px 80px;
+    background:
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.025) 0px, rgba(255,255,255,0.025) 40px, transparent 40px, transparent 80px),
+      var(--verde-cancha);
+    position:relative;
+  }
+
+  /* ===== PANTALLA DE PARTIDO SUELTO ===== */
+  #pantalla-partido-suelto{ display:none; }
+
+  .cancha-suelto{
+    min-height: calc(100vh - 70px);
+    padding: 40px 20px 80px;
+    background:
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.025) 0px, rgba(255,255,255,0.025) 40px, transparent 40px, transparent 80px),
+      var(--verde-cancha);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+
+  .selector-partido-suelto{
+    display:flex;
+    align-items:flex-end;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content:center;
+    max-width: 700px;
+  }
+
+  .campo-selector-equipo{
+    display:flex;
+    flex-direction:column;
+    gap: 8px;
+  }
+  .campo-selector-equipo label{
+    font-size: 0.75rem;
+    opacity: 0.7;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .campo-selector-equipo select{
+    background: var(--crema);
+    color: #1a1a1a;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    min-width: 210px;
+    cursor:pointer;
+  }
+
+  .vs-suelto{
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--dorado);
+    padding-bottom: 10px;
+  }
+
+  #btn-confirmar-partido-suelto{
+    width:auto;
+    padding: 12px 24px;
+    margin: 0 0 0 6px;
+  }
+
+  .resultado-partido-suelto{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap: 16px;
+    margin-top: 10px;
+  }
+  .instruccion-suelto{
+    opacity:0.75;
+    font-size:0.88rem;
+    margin:0;
+  }
+  .resultado-partido-suelto .par-final .equipo{
+    width: 180px;
+  }
+  #zona-analisis-suelto{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+    text-align:center;
+    max-width: 420px;
+  }
+  #zona-analisis-suelto p{
+    margin:0;
+    font-size:0.82rem;
+    opacity:0.7;
+  }
+
+  .grid-bracket{
+    display:grid;
+    grid-template-columns: 190px 150px 150px 150px 1fr 150px 150px 150px 190px;
+    align-items:center;
+    column-gap: 6px;
+  }
+
+  .col-titulo{
+    text-align:center;
+    font-size: 0.72rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    opacity: 0.75;
+    padding-bottom: 14px;
+    white-space: nowrap;
+  }
+
+  .col{
+    display:flex;
+    flex-direction:column;
+    justify-content: space-around;
+    height: 100%;
+  }
+
+  /* ===== TARJETA DE PARTIDO ===== */
+  .partido{
+    display:flex;
+    flex-direction:column;
+    gap: 4px;
+    margin: 8px 0;
+  }
+
+  .equipo{
+    display:flex;
+    align-items:center;
+    gap: 8px;
+    background: var(--crema);
+    color: #1a1a1a;
+    border-radius: 8px;
+    padding: 6px 10px;
+    min-height: 36px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.15s ease;
+    position: relative;
+    font-size: 0.8rem;
+    font-weight: 600;
+    user-select: none;
+  }
+
+  .equipo:hover:not(.vacio):not(.ganador){
+    border-color: var(--dorado);
+    transform: scale(1.02);
+  }
+
+  .equipo.vacio{
+    background: rgba(244,241,232,0.18);
+    cursor: default;
+    color: rgba(244,241,232,0.4);
+    justify-content: center;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 0.72rem;
+  }
+
+  .equipo.perdedor{
+    opacity: 0.4;
+    text-decoration: line-through;
+    cursor: pointer;
+  }
+
+  .equipo.ganador{
+    background: var(--dorado);
+    border-color: #b8932c;
+    box-shadow: 0 0 0 2px rgba(212,175,55,0.4);
+    cursor: pointer;
+  }
+
+  /* Variantes de color cuando ya hay un análisis con probabilidades */
+  .equipo.ganador.prob-alta{
+    background: #4CAF50;
+    border-color: #2e7d32;
+    box-shadow: 0 0 0 2px rgba(76,175,80,0.4);
+    color: #ffffff;
+  }
+  .equipo.ganador.prob-baja{
+    background: #E5534B;
+    border-color: #a83232;
+    box-shadow: 0 0 0 2px rgba(229,83,75,0.4);
+    color: #ffffff;
+  }
+
+  .porcentaje-badge{
+    margin-left: auto;
+    font-size: 0.72rem;
+    font-weight: 800;
+    flex-shrink: 0;
+    padding: 1px 6px;
+    border-radius: 999px;
+    background: rgba(0,0,0,0.18);
+  }
+  .porcentaje-badge.afuera{
+    position: relative;
+    margin-left: 6px;
+    background: rgba(244,241,232,0.15);
+    color: var(--crema);
+  }
+
+  /* ===== ETIQUETAS DE RESULTADOS REALES (Actualidad) ===== */
+  .equipo.jugado-acerto{
+    background: #4CAF50 !important;
+    border-color: #2e7d32 !important;
+    color: #fff !important;
+  }
+  .equipo.jugado-fallo{
+    background: #888 !important;
+    border-color: #555 !important;
+    color: #fff !important;
+    opacity: 0.85;
+  }
+  .etiqueta-jugado{
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 1px 6px;
+    border-radius: 999px;
+    background: rgba(0,0,0,0.25);
+    margin-left: auto;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+  .marcador-jugado{
+    font-size: 0.65rem;
+    opacity: 0.85;
+    margin-left: 4px;
+    font-weight: 600;
+  }
+
+  .bandera{
+    width: 22px;
+    height: 16px;
+    border-radius: 2px;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.15);
+    flex-shrink:0;
+    background: #ccc;
+    display:inline-block;
+    overflow:hidden;
+    line-height:0;
+  }
+  .bandera svg{
+    width:100%;
+    height:100%;
+    display:block;
+  }
+
+  .nombre-equipo{
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+
+  /* Conectores SVG por columna */
+  .col-conectores{
+    height:100%;
+    position:relative;
+  }
+  .col-conectores svg{
+    width:100%;
+    height:100%;
+    display:block;
+  }
+  .col-conectores path{
+    fill:none;
+    stroke: var(--linea);
+    stroke-width: 2;
+  }
+
+  /* ===== ZONA FINAL ===== */
+  .zona-final{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap: 18px;
+    height:100%;
+  }
+
+  .titulo-final{
+    font-size: 1.3rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--dorado);
+    font-weight: 700;
+  }
+
+  .par-final{
+    display:flex;
+    gap: 6px;
+  }
+  .par-final .equipo{
+    width: 130px;
+  }
+
+  .trofeo-box{
+    margin-top: 6px;
+    text-align:center;
+    min-height: 70px;
+  }
+  .trofeo-box .campeon{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
+  }
+  .trofeo-box .bandera-campeon{
+    display:inline-block;
+    width:54px;
+    height:40px;
+    border-radius:6px;
+    overflow:hidden;
+    line-height:0;
+    box-shadow: 0 0 0 3px var(--dorado), 0 8px 20px rgba(0,0,0,0.5);
+  }
+  .trofeo-box .bandera-campeon svg{
+    width:100%;
+    height:100%;
+    display:block;
+  }
+  .trofeo-box .campeon-nombre{
+    font-weight:700;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    color: var(--dorado);
+    font-size:0.85rem;
+  }
+  .trofeo-emoji{ font-size: 1.6rem; }
+
+  .zona-tercer-lugar{
+    grid-column: 1 / -1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+    margin-top: 50px;
+    padding-top: 26px;
+    border-top: 1px dashed var(--linea);
+  }
+  .titulo-tercer{
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+  .par-tercer{
+    display:flex;
+    gap: 6px;
+  }
+  .par-tercer .equipo{ width: 150px; }
+
+  /* Toast de guardado */
+  #toast{
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--dorado);
+    color: var(--verde-oscuro);
+    padding: 10px 22px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    opacity: 0;
+    pointer-events:none;
+    transition: all 0.25s ease;
+    z-index: 100;
+    white-space: nowrap;
+  }
+  #toast.show{
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* Modal de confirmación */
+  .modal-overlay{
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index: 200;
+    padding: 20px;
+  }
+  .modal-overlay.show{ display:flex; }
+  .modal-box{
+    background: var(--verde-claro);
+    border: 1px solid var(--dorado);
+    border-radius: 14px;
+    padding: 28px;
+    max-width: 380px;
+    text-align:center;
+  }
+  .modal-box p{ margin: 0 0 20px; line-height:1.5; }
+  .modal-botones{ display:flex; gap:10px; }
+  .modal-botones .btn{ margin-bottom:0; }
+
+  /* ===== BOTÓN Y MODAL DE ANÁLISIS IA ===== */
+  #zona-analisis{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+    margin: 36px 0 10px;
+    padding-top: 24px;
+    border-top: 1px dashed var(--linea);
+    text-align:center;
+  }
+  #zona-analisis p{
+    margin:0;
+    font-size:0.82rem;
+    opacity:0.7;
+    max-width: 420px;
+  }
+  .btn-analizar{
+    background: linear-gradient(135deg, var(--dorado), #b8932c);
+    color: var(--verde-oscuro);
+    border:none;
+    border-radius: 10px;
+    padding: 14px 28px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap: 10px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .btn-analizar:hover{ transform: translateY(-2px); box-shadow: 0 6px 16px var(--sombra); }
+  .btn-analizar:disabled{
+    opacity:0.6;
+    cursor: not-allowed;
+    transform:none;
+  }
+
+  .spinner{
+    width:16px;
+    height:16px;
+    border-radius:50%;
+    border: 2.5px solid rgba(10,46,36,0.3);
+    border-top-color: var(--verde-oscuro);
+    animation: girar 0.7s linear infinite;
+    display:none;
+  }
+  .spinner.show{ display:inline-block; }
+  @keyframes girar{ to{ transform: rotate(360deg); } }
+
+  .modal-overlay.modal-analisis .modal-box{
+    max-width: 620px;
+    width: 100%;
+    text-align:left;
+    max-height: 80vh;
+    overflow-y:auto;
+  }
+  .modal-analisis-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom: 16px;
+  }
+  .modal-analisis-header h3{
+    margin:0;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--dorado);
+  }
+  .cerrar-modal{
+    background:none;
+    border:none;
+    color: var(--crema);
+    font-size: 1.4rem;
+    cursor:pointer;
+    line-height:1;
+    opacity:0.7;
+  }
+  .cerrar-modal:hover{ opacity:1; }
+
+  .analisis-contenido{
+    font-size: 0.9rem;
+    line-height: 1.65;
+  }
+  .analisis-contenido h4{
+    color: var(--dorado);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 18px 0 8px;
+  }
+  .analisis-contenido h4:first-child{ margin-top:0; }
+  .analisis-contenido p{ margin: 0 0 10px; }
+  .analisis-contenido ul{ margin: 0 0 10px; padding-left: 20px; }
+  .analisis-contenido li{ margin-bottom: 6px; }
+  .analisis-contenido strong{ color: var(--dorado); }
+
+  .analisis-loading{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:14px;
+    padding: 30px 10px;
+    text-align:center;
+  }
+  .analisis-loading .spinner-grande{
+    width:34px;
+    height:34px;
+    border-radius:50%;
+    border: 3px solid rgba(244,241,232,0.2);
+    border-top-color: var(--dorado);
+    animation: girar 0.8s linear infinite;
+  }
+  .analisis-loading p{ opacity:0.75; font-size:0.85rem; margin:0; }
+
+  .analisis-error{
+    background: rgba(224,128,128,0.12);
+    border: 1px solid #e08080;
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 0.85rem;
+    color: #f0a8a8;
+  }
+
+  @media (max-width: 640px){
+    .topbar h2{ font-size: 0.95rem; }
+    .tarjeta-inicio{ padding: 32px 24px; }
+    .tarjeta-inicio h1{ font-size: 1.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ====== PANTALLA DE INICIO ====== -->
+<div id="pantalla-inicio">
+  <select class="selector-idioma" id="selector-idioma-inicio">
+    <option value="es">🌐 Español</option>
+    <option value="en">🌐 English</option>
+    <option value="fr">🌐 Français</option>
+    <option value="pt">🌐 Português</option>
+    <option value="de">🌐 Deutsch</option>
+  </select>
+  <div class="tarjeta-inicio">
+    <h1 data-i18n="titulo_h1_pre">Predicción <span data-i18n="titulo_h1_span">Mundial</span></h1>
+    <p class="sub" data-i18n="subtitulo_inicio">Elige al ganador de cada partido y avanza tu bracket hasta la final</p>
+
+    <button class="btn" id="btn-nueva" data-i18n="btn_nueva">Nueva predicción</button>
+    <button class="btn secundario" id="btn-continuar" style="display:none;" data-i18n="btn_continuar">Continuar mi predicción</button>
+    <button class="btn secundario" id="btn-partido-suelto" data-i18n="btn_partido_suelto">🔍 Adivinar partido en específico</button>
+    <div id="estado-guardado"></div>
+  </div>
+</div>
+
+<!-- ====== PANTALLA DEL BRACKET ====== -->
+<div id="pantalla-bracket">
+  <div class="topbar">
+    <h2 data-i18n="titulo_h2_pre">Predicción <span data-i18n="titulo_h1_span">Mundial</span></h2>
+    <div class="acciones">
+      <select class="pill-btn" id="selector-idioma-bracket" style="cursor:pointer;">
+        <option value="es">🌐 ES</option>
+        <option value="en">🌐 EN</option>
+        <option value="fr">🌐 FR</option>
+        <option value="pt">🌐 PT</option>
+        <option value="de">🌐 DE</option>
+      </select>
+      <button class="pill-btn" id="btn-inicio" data-i18n="btn_topbar_inicio">Inicio</button>
+      <button class="pill-btn" id="btn-reiniciar" data-i18n="btn_topbar_reiniciar">Reiniciar</button>
+      <button class="pill-btn" id="btn-actualidad" data-i18n="btn_actualidad">📰 Actualidad</button>
+    </div>
+  </div>
+  <div class="barra-progreso-wrap">
+    <div class="barra-progreso"><div class="barra-progreso-fill" id="barra-fill"></div></div>
+    <div class="progreso-texto" id="barra-texto">0 / 31 partidos definidos</div>
+  </div>
+
+  <div class="cancha">
+    <div class="grid-bracket" id="grid-bracket">
+      <!-- generado por JS -->
+    </div>
+
+    <div id="zona-analisis" style="display:none;">
+      <p data-i18n="texto_zona_analisis">Cuando termines toda tu predicción, una IA puede revisar tus 31 resultados contra datos actuales (rankings, forma reciente, noticias) y darte su opinión.</p>
+      <button class="btn-analizar" id="btn-analizar">
+        <span id="texto-btn-analizar" data-i18n="btn_analizar">🔮 Analizar mi predicción</span>
+        <span class="spinner" id="spinner-analizar"></span>
+      </button>
+      <div id="tiempo-espera-analizar" style="display:none; font-size:0.75rem; opacity:0.6; margin-top:4px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== PANTALLA: ADIVINAR PARTIDO EN ESPECÍFICO ====== -->
+<div id="pantalla-partido-suelto">
+  <div class="topbar">
+    <h2 data-i18n="titulo_partido_suelto">🔍 Adivinar partido en específico</h2>
+    <div class="acciones">
+      <select class="pill-btn" id="selector-idioma-suelto" style="cursor:pointer;">
+        <option value="es">🌐 ES</option>
+        <option value="en">🌐 EN</option>
+        <option value="fr">🌐 FR</option>
+        <option value="pt">🌐 PT</option>
+        <option value="de">🌐 DE</option>
+      </select>
+      <button class="pill-btn" id="btn-inicio-desde-suelto" data-i18n="btn_topbar_inicio">Inicio</button>
+    </div>
+  </div>
+
+  <div class="cancha-suelto">
+    <div class="selector-partido-suelto" id="selector-partido-suelto">
+      <div class="campo-selector-equipo">
+        <label data-i18n="elige_equipo_a">Elige el primer equipo</label>
+        <select id="select-equipo-a"></select>
+      </div>
+      <div class="vs-suelto">VS</div>
+      <div class="campo-selector-equipo">
+        <label data-i18n="elige_equipo_b">Elige el segundo equipo</label>
+        <select id="select-equipo-b"></select>
+      </div>
+      <button class="btn" id="btn-confirmar-partido-suelto" data-i18n="btn_confirmar_partido">Elegir este partido</button>
+    </div>
+
+    <div class="resultado-partido-suelto" id="resultado-partido-suelto" style="display:none;">
+      <p class="instruccion-suelto" data-i18n="instruccion_pick_suelto">Da clic en el equipo que crees que va a ganar</p>
+      <div class="par-final" id="par-partido-suelto"></div>
+
+      <div id="zona-analisis-suelto" style="display:none; margin-top: 28px;">
+        <p data-i18n="texto_zona_analisis_suelto">Una IA puede revisar tu elección contra datos actuales y darte su opinión.</p>
+        <button class="btn-analizar" id="btn-analizar-suelto">
+          <span id="texto-btn-analizar-suelto" data-i18n="btn_analizar">🔮 Analizar mi predicción</span>
+          <span class="spinner" id="spinner-analizar-suelto"></span>
+        </button>
+        <div id="tiempo-espera-analizar-suelto" style="display:none; font-size:0.75rem; opacity:0.6; margin-top:4px;"></div>
+      </div>
+
+      <button class="pill-btn" id="btn-otro-partido-suelto" style="margin-top:24px;" data-i18n="btn_otro_partido">↺ Elegir otro partido</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" data-i18n="toast_guardado">Guardado ✓</div>
+
+<div class="modal-overlay" id="modal-reiniciar">
+  <div class="modal-box">
+    <p data-i18n="modal_reiniciar_texto">¿Seguro que quieres reiniciar tu predicción? Se borrará todo el progreso guardado.</p>
+    <div class="modal-botones">
+      <button class="btn secundario" id="modal-cancelar" style="margin-bottom:0;" data-i18n="modal_cancelar">Cancelar</button>
+      <button class="btn peligro" id="modal-confirmar" style="width:100%;" data-i18n="modal_si_reiniciar">Sí, reiniciar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-resultados">
+  <div class="modal-box">
+    <p data-i18n="modal_resultados_pregunta">¿Quieres ver el marcador exacto de los partidos ya jugados?</p>
+    <div class="modal-botones">
+      <button class="btn secundario" id="modal-resultados-no" style="margin-bottom:0;" data-i18n="modal_resultados_no">No, solo quién avanzó</button>
+      <button class="btn" id="modal-resultados-si" style="width:100%; margin-bottom:0;" data-i18n="modal_resultados_si">Sí, mostrar resultados</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay modal-analisis" id="modal-analisis">
+  <div class="modal-box">
+    <div class="modal-analisis-header">
+      <h3 data-i18n="modal_analisis_titulo">🔮 Análisis de tu predicción</h3>
+      <button class="cerrar-modal" id="cerrar-modal-analisis">&times;</button>
+    </div>
+    <div id="contenido-analisis">
+      <!-- generado por JS -->
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+
+  // ---------- SISTEMA DE IDIOMAS ----------
+  const CLAVE_IDIOMA = "mundial_idioma_v1";
+  let idiomaActual = "es";
+
+  const TEXTOS = {
+    es: {
+      titulo_h1_pre: "Predicción ",
+      titulo_h1_span: "Mundial",
+      titulo_h2_pre: "Predicción ",
+      subtitulo_inicio: "Elige al ganador de cada partido y avanza tu bracket hasta la final",
+      btn_nueva: "Nueva predicción",
+      btn_continuar: "Continuar mi predicción",
+      btn_topbar_inicio: "Inicio",
+      btn_topbar_reiniciar: "Reiniciar",
+      progreso_texto: (n,t)=> `${n} / ${t} partidos definidos`,
+      texto_zona_analisis: "Cuando termines toda tu predicción, una IA puede revisar tus 31 resultados contra datos actuales (rankings, forma reciente, noticias) y darte su opinión.",
+      btn_analizar: "🔮 Analizar mi predicción",
+      btn_analizar_cargando: "Buscando datos y analizando...",
+      tiempo_espera: "Esto puede tardar entre 15 y 30 segundos",
+      toast_guardado: "Guardado ✓",
+      toast_reiniciado: "Predicción reiniciada",
+      modal_reiniciar_texto: "¿Seguro que quieres reiniciar tu predicción? Se borrará todo el progreso guardado.",
+      modal_cancelar: "Cancelar",
+      modal_si_reiniciar: "Sí, reiniciar",
+      modal_analisis_titulo: "🔮 Análisis de tu predicción",
+      titulo_final: "FINAL",
+      titulo_tercer: "TERCER LUGAR",
+      por_definir: "Por definir",
+      tit_dieciseisavos: "DIECISEISAVOS",
+      tit_octavos: "OCTAVOS",
+      tit_cuartos: "CUARTOS",
+      tit_semis: "SEMIS",
+      estado_guardado_si: "Tienes una predicción guardada",
+      estado_guardado_no: "Aún no tienes una predicción guardada",
+      error_analisis: "No se pudo generar el análisis en este momento. Puede ser un problema de conexión o del servicio. Intenta de nuevo en unos segundos.",
+      prompt_sistema: `Eres un analista de fútbol experto, en español, hablando con un usuario que llenó una predicción tipo bracket del Mundial 2026. Tienes acceso a búsqueda web: úsala para revisar rankings FIFA actuales, forma reciente de las selecciones, lesiones relevantes, y cualquier noticia que ayude a evaluar la predicción.
+
+Da un análisis honesto pero amable, sin asegurar resultados futuros (deja claro que el fútbol es impredecible). Estructura tu respuesta en markdown simple con: una sección "### Resumen general" (2-3 líneas), una sección "### Lo más sólido de tu predicción" (lista de 2-4 puntos), una sección "### Las apuestas más arriesgadas" (lista de 2-4 puntos), y una sección final "### Tu campeón" comentando qué tan viable es tu campeón elegido. Sé conciso, no más de 300 palabras.
+
+MUY IMPORTANTE: al final de tu respuesta, agrega un bloque delimitado EXACTAMENTE así, sin nada más adentro que un JSON válido (sin comentarios, sin texto extra), con un porcentaje de probabilidad de 1 a 99 para CADA UNO de los 32 partidos que te paso (incluyendo el de tercer lugar), evaluando qué tan probable es, según los datos que encontraste, que el equipo que el usuario eligió como ganador realmente gane ese partido específico:
+
+[[[JSON_PROBABILIDADES]]]
+{"r1":[n1,n2,...,n16],"r2":[n1,...,n8],"r3":[n1,...,n4],"r4":[n1,n2],"r5":[n1],"tercer":[n1]}
+[[[FIN_JSON_PROBABILIDADES]]]
+
+Cada array debe tener exactamente el número de partidos de esa ronda, en el mismo orden en que te los doy. Usa números enteros del 1 al 99.`,
+      prompt_usuario: (resumen)=> `Aquí está mi predicción completa del bracket del Mundial 2026:\n\n${resumen}\n\nAnaliza qué tan realista está, basándote en datos actuales que puedas buscar, y no olvides el bloque JSON de probabilidades al final.`,
+
+      btn_partido_suelto: "🔍 Adivinar partido en específico",
+      titulo_partido_suelto: "🔍 Adivinar partido en específico",
+      elige_equipo_a: "Elige el primer equipo",
+      elige_equipo_b: "Elige el segundo equipo",
+      btn_confirmar_partido: "Elegir este partido",
+      instruccion_pick_suelto: "Da clic en el equipo que crees que va a ganar",
+      texto_zona_analisis_suelto: "Una IA puede revisar tu elección contra datos actuales y darte su opinión.",
+      btn_otro_partido: "↺ Elegir otro partido",
+      error_mismo_equipo: "Elige dos equipos diferentes.",
+      btn_actualidad: "📰 Actualidad",
+      btn_actualidad_cargando: "Buscando resultados reales...",
+      tiempo_espera_actualidad: "Esto puede tardar entre 15 y 30 segundos",
+      modal_resultados_pregunta: "¿Quieres ver el marcador exacto de los partidos ya jugados?",
+      modal_resultados_si: "Sí, mostrar resultados",
+      modal_resultados_no: "No, solo quién avanzó",
+      etiqueta_jugado: "YA JUGADO",
+      etiqueta_acertaste: "✓ Acertaste",
+      etiqueta_fallaste: "✗ No acertaste",
+      error_actualidad: "No se pudo buscar la actualidad del torneo en este momento. Intenta de nuevo en unos segundos.",
+      prompt_sistema_actualidad: `Eres un asistente que investiga resultados reales y oficiales de partidos del Mundial 2026 (que ya está en curso). Tienes acceso a búsqueda web: úsala para encontrar, de los partidos que te voy a listar, cuáles YA SE JUGARON en la realidad a la fecha de hoy, y cuál fue el resultado real (equipo ganador y marcador exacto). Responde ÚNICAMENTE con un bloque JSON, sin texto antes ni después, exactamente con este formato (usa los códigos de país de 2-3 letras que te doy entre paréntesis junto a cada equipo; si un partido NO se ha jugado aún, no lo incluyas en el array):
+
+[[[JSON_RESULTADOS]]]
+{"resultados":[{"r1_index":0,"ganador_code":"de","marcador":"2-1"}]}
+[[[FIN_JSON_RESULTADOS]]]
+
+r1_index es la posición del partido en la lista que te doy (empezando en 0). ganador_code es el código del equipo que ganó. marcador es el resultado final en formato "X-Y" a favor del ganador (si fue por penales, agrega eso, ej "1-1 (4-3 pen)").`,
+      prompt_usuario_actualidad: (lista)=> `Aquí está la lista de los partidos de dieciseisavos de final del Mundial 2026, en orden (índice 0 en adelante):\n\n${lista}\n\nBusca cuáles ya se jugaron en la realidad y dame el JSON con los resultados reales.`
+    },
+    en: {
+      titulo_h1_pre: "World Cup ",
+      titulo_h1_span: "Predictor",
+      titulo_h2_pre: "World Cup ",
+      subtitulo_inicio: "Pick the winner of each match and advance your bracket to the final",
+      btn_nueva: "New prediction",
+      btn_continuar: "Continue my prediction",
+      btn_topbar_inicio: "Home",
+      btn_topbar_reiniciar: "Reset",
+      progreso_texto: (n,t)=> `${n} / ${t} matches set`,
+      texto_zona_analisis: "Once you finish your whole prediction, an AI can review your 31 picks against current data (rankings, recent form, news) and share its take.",
+      btn_analizar: "🔮 Analyze my prediction",
+      btn_analizar_cargando: "Searching data and analyzing...",
+      tiempo_espera: "This can take about 15–30 seconds",
+      toast_guardado: "Saved ✓",
+      toast_reiniciado: "Prediction reset",
+      modal_reiniciar_texto: "Are you sure you want to reset your prediction? All saved progress will be deleted.",
+      modal_cancelar: "Cancel",
+      modal_si_reiniciar: "Yes, reset",
+      modal_analisis_titulo: "🔮 Your prediction analysis",
+      titulo_final: "FINAL",
+      titulo_tercer: "THIRD PLACE",
+      por_definir: "To be defined",
+      tit_dieciseisavos: "ROUND OF 32",
+      tit_octavos: "ROUND OF 16",
+      tit_cuartos: "QUARTERFINALS",
+      tit_semis: "SEMIFINALS",
+      estado_guardado_si: "You have a saved prediction",
+      estado_guardado_no: "You don't have a saved prediction yet",
+      error_analisis: "The analysis couldn't be generated right now. It might be a connection or service issue. Try again in a few seconds.",
+      prompt_sistema: `You are an expert football analyst, speaking English, talking to a user who filled out a World Cup 2026 bracket prediction. You have web search access: use it to check current FIFA rankings, recent team form, relevant injuries, and any news that helps evaluate the prediction.
+
+Give an honest but friendly analysis, without guaranteeing future results (make clear football is unpredictable). Structure your answer in simple markdown with: a "### General summary" section (2-3 lines), a "### Strongest parts of your prediction" section (list of 2-4 points), a "### Riskiest picks" section (list of 2-4 points), and a final "### Your champion" section commenting on how viable the chosen champion is. Be concise, no more than 300 words.
+
+VERY IMPORTANT: at the end of your answer, add a block delimited EXACTLY like this, with nothing inside except valid JSON (no comments, no extra text), with a probability percentage from 1 to 99 for EACH of the 32 matches passed to you (including the third place match), evaluating how likely it is, based on the data you found, that the team the user picked as winner will actually win that specific match:
+
+[[[JSON_PROBABILIDADES]]]
+{"r1":[n1,n2,...,n16],"r2":[n1,...,n8],"r3":[n1,...,n4],"r4":[n1,n2],"r5":[n1],"tercer":[n1]}
+[[[FIN_JSON_PROBABILIDADES]]]
+
+Each array must have exactly the number of matches in that round, in the same order given to you. Use whole numbers from 1 to 99.`,
+      prompt_usuario: (resumen)=> `Here is my complete World Cup 2026 bracket prediction:\n\n${resumen}\n\nAnalyze how realistic it is, based on current data you can search for, and don't forget the JSON probabilities block at the end.`,
+
+      btn_partido_suelto: "🔍 Predict a specific match",
+      titulo_partido_suelto: "🔍 Predict a specific match",
+      elige_equipo_a: "Choose the first team",
+      elige_equipo_b: "Choose the second team",
+      btn_confirmar_partido: "Pick this match",
+      instruccion_pick_suelto: "Click on the team you think will win",
+      texto_zona_analisis_suelto: "An AI can review your pick against current data and share its opinion.",
+      btn_otro_partido: "↺ Pick another match",
+      error_mismo_equipo: "Choose two different teams.",
+      btn_actualidad: "📰 Live updates",
+      btn_actualidad_cargando: "Searching real results...",
+      tiempo_espera_actualidad: "This can take about 15–30 seconds",
+      modal_resultados_pregunta: "Do you want to see the exact score of matches already played?",
+      modal_resultados_si: "Yes, show scores",
+      modal_resultados_no: "No, just who advanced",
+      etiqueta_jugado: "ALREADY PLAYED",
+      etiqueta_acertaste: "✓ You got it right",
+      etiqueta_fallaste: "✗ You got it wrong",
+      error_actualidad: "Couldn't fetch the tournament's live updates right now. Try again in a few seconds.",
+      prompt_sistema_actualidad: `You are an assistant that researches real, official results of World Cup 2026 matches (the tournament is already underway). You have web search access: use it to find, among the matches I'm about to list, which ones have ALREADY BEEN PLAYED in reality as of today, and what the real result was (winning team and exact score). Respond ONLY with a JSON block, no text before or after, exactly in this format (use the 2-3 letter country codes given in parentheses next to each team; if a match has NOT been played yet, do not include it in the array):
+
+[[[JSON_RESULTADOS]]]
+{"resultados":[{"r1_index":0,"ganador_code":"de","marcador":"2-1"}]}
+[[[FIN_JSON_RESULTADOS]]]
+
+r1_index is the position of the match in the list given to you (starting at 0). ganador_code is the code of the team that won. marcador is the final score in "X-Y" format favoring the winner (if decided by penalties, add that, e.g. "1-1 (4-3 pen)").`,
+      prompt_usuario_actualidad: (lista)=> `Here is the list of World Cup 2026 round-of-32 matches, in order (index 0 onward):\n\n${lista}\n\nFind which ones have already been played in reality and give me the JSON with the real results.`
+    },
+    fr: {
+      titulo_h1_pre: "Pronostic ",
+      titulo_h1_span: "Coupe du Monde",
+      titulo_h2_pre: "Pronostic ",
+      subtitulo_inicio: "Choisis le vainqueur de chaque match et avance ton tableau jusqu'à la finale",
+      btn_nueva: "Nouveau pronostic",
+      btn_continuar: "Continuer mon pronostic",
+      btn_topbar_inicio: "Accueil",
+      btn_topbar_reiniciar: "Réinitialiser",
+      progreso_texto: (n,t)=> `${n} / ${t} matchs définis`,
+      texto_zona_analisis: "Une fois ton pronostic complet, une IA peut comparer tes 31 choix aux données actuelles (classements, forme récente, actualités) et te donner son avis.",
+      btn_analizar: "🔮 Analyser mon pronostic",
+      btn_analizar_cargando: "Recherche de données et analyse...",
+      tiempo_espera: "Cela peut prendre 15 à 30 secondes",
+      toast_guardado: "Enregistré ✓",
+      toast_reiniciado: "Pronostic réinitialisé",
+      modal_reiniciar_texto: "Es-tu sûr de vouloir réinitialiser ton pronostic ? Tout le progrès sera supprimé.",
+      modal_cancelar: "Annuler",
+      modal_si_reiniciar: "Oui, réinitialiser",
+      modal_analisis_titulo: "🔮 Analyse de ton pronostic",
+      titulo_final: "FINALE",
+      titulo_tercer: "PETITE FINALE",
+      por_definir: "À déterminer",
+      tit_dieciseisavos: "32E DE FINALE",
+      tit_octavos: "16E DE FINALE",
+      tit_cuartos: "QUARTS",
+      tit_semis: "DEMI-FINALES",
+      estado_guardado_si: "Tu as un pronostic enregistré",
+      estado_guardado_no: "Tu n'as pas encore de pronostic enregistré",
+      error_analisis: "L'analyse n'a pas pu être générée pour le moment. Cela peut être un problème de connexion ou de service. Réessaie dans quelques secondes.",
+      prompt_sistema: `Tu es un analyste de football expert, parlant français, qui s'adresse à un utilisateur ayant rempli un pronostic de tableau de la Coupe du Monde 2026. Tu as accès à la recherche web : utilise-la pour vérifier les classements FIFA actuels, la forme récente des équipes, les blessures pertinentes, et toute actualité utile à l'évaluation du pronostic.
+
+Donne une analyse honnête mais amicale, sans garantir de résultats futurs (précise que le football est imprévisible). Structure ta réponse en markdown simple avec : une section "### Résumé général" (2-3 lignes), une section "### Les points les plus solides de ton pronostic" (liste de 2-4 points), une section "### Les choix les plus risqués" (liste de 2-4 points), et une section finale "### Ton champion" commentant la viabilité du champion choisi. Sois concis, pas plus de 300 mots.
+
+TRÈS IMPORTANT : à la fin de ta réponse, ajoute un bloc délimité EXACTEMENT ainsi, sans rien d'autre à l'intérieur qu'un JSON valide (sans commentaires, sans texte supplémentaire), avec un pourcentage de probabilité de 1 à 99 pour CHACUN des 32 matchs fournis (y compris la petite finale), évaluant la probabilité, selon les données trouvées, que l'équipe choisie par l'utilisateur gagne réellement ce match précis :
+
+[[[JSON_PROBABILIDADES]]]
+{"r1":[n1,n2,...,n16],"r2":[n1,...,n8],"r3":[n1,...,n4],"r4":[n1,n2],"r5":[n1],"tercer":[n1]}
+[[[FIN_JSON_PROBABILIDADES]]]
+
+Chaque tableau doit avoir exactement le nombre de matchs de ce tour, dans le même ordre que celui fourni. Utilise des nombres entiers de 1 à 99.`,
+      prompt_usuario: (resumen)=> `Voici mon pronostic complet du tableau de la Coupe du Monde 2026 :\n\n${resumen}\n\nAnalyse à quel point il est réaliste, en te basant sur des données actuelles que tu peux rechercher, et n'oublie pas le bloc JSON de probabilités à la fin.`,
+
+      btn_partido_suelto: "🔍 Deviner un match en particulier",
+      titulo_partido_suelto: "🔍 Deviner un match en particulier",
+      elige_equipo_a: "Choisis la première équipe",
+      elige_equipo_b: "Choisis la deuxième équipe",
+      btn_confirmar_partido: "Choisir ce match",
+      instruccion_pick_suelto: "Clique sur l'équipe que tu penses gagnante",
+      texto_zona_analisis_suelto: "Une IA peut comparer ton choix aux données actuelles et te donner son avis.",
+      btn_otro_partido: "↺ Choisir un autre match",
+      error_mismo_equipo: "Choisis deux équipes différentes.",
+      btn_actualidad: "📰 Actualité",
+      btn_actualidad_cargando: "Recherche des résultats réels...",
+      tiempo_espera_actualidad: "Cela peut prendre 15 à 30 secondes",
+      modal_resultados_pregunta: "Veux-tu voir le score exact des matchs déjà joués ?",
+      modal_resultados_si: "Oui, afficher les scores",
+      modal_resultados_no: "Non, juste qui a avancé",
+      etiqueta_jugado: "DÉJÀ JOUÉ",
+      etiqueta_acertaste: "✓ Tu as eu raison",
+      etiqueta_fallaste: "✗ Tu t'es trompé",
+      error_actualidad: "Impossible de récupérer l'actualité du tournoi pour le moment. Réessaie dans quelques secondes.",
+      prompt_sistema_actualidad: `Tu es un assistant qui recherche les résultats réels et officiels des matchs de la Coupe du Monde 2026 (le tournoi est déjà en cours). Tu as accès à la recherche web : utilise-la pour trouver, parmi les matchs que je vais te lister, lesquels ont DÉJÀ ÉTÉ JOUÉS dans la réalité à ce jour, et quel a été le résultat réel (équipe gagnante et score exact). Réponds UNIQUEMENT avec un bloc JSON, sans texte avant ni après, exactement dans ce format (utilise les codes pays de 2-3 lettres donnés entre parenthèses à côté de chaque équipe ; si un match n'a PAS encore été joué, ne l'inclus pas dans le tableau) :
+
+[[[JSON_RESULTADOS]]]
+{"resultados":[{"r1_index":0,"ganador_code":"de","marcador":"2-1"}]}
+[[[FIN_JSON_RESULTADOS]]]
+
+r1_index est la position du match dans la liste fournie (en commençant à 0). ganador_code est le code de l'équipe gagnante. marcador est le score final au format "X-Y" en faveur du gagnant (si décidé aux tirs au but, ajoute-le, ex "1-1 (4-3 tab)").`,
+      prompt_usuario_actualidad: (lista)=> `Voici la liste des matchs de 32e de finale de la Coupe du Monde 2026, dans l'ordre (index 0 et suivants) :\n\n${lista}\n\nTrouve lesquels ont déjà été joués dans la réalité et donne-moi le JSON avec les résultats réels.`
+    },
+    pt: {
+      titulo_h1_pre: "Predição ",
+      titulo_h1_span: "Copa do Mundo",
+      titulo_h2_pre: "Predição ",
+      subtitulo_inicio: "Escolha o vencedor de cada partida e avance seu chaveamento até a final",
+      btn_nueva: "Nova predição",
+      btn_continuar: "Continuar minha predição",
+      btn_topbar_inicio: "Início",
+      btn_topbar_reiniciar: "Reiniciar",
+      progreso_texto: (n,t)=> `${n} / ${t} partidas definidas`,
+      texto_zona_analisis: "Quando você terminar toda a sua predição, uma IA pode revisar suas 31 escolhas com base em dados atuais (rankings, forma recente, notícias) e dar sua opinião.",
+      btn_analizar: "🔮 Analisar minha predição",
+      btn_analizar_cargando: "Buscando dados e analisando...",
+      tiempo_espera: "Isso pode levar de 15 a 30 segundos",
+      toast_guardado: "Salvo ✓",
+      toast_reiniciado: "Predição reiniciada",
+      modal_reiniciar_texto: "Tem certeza de que deseja reiniciar sua predição? Todo o progresso salvo será apagado.",
+      modal_cancelar: "Cancelar",
+      modal_si_reiniciar: "Sim, reiniciar",
+      modal_analisis_titulo: "🔮 Análise da sua predição",
+      titulo_final: "FINAL",
+      titulo_tercer: "TERCEIRO LUGAR",
+      por_definir: "A definir",
+      tit_dieciseisavos: "DEZESSEIS AVOS",
+      tit_octavos: "OITAVAS",
+      tit_cuartos: "QUARTAS",
+      tit_semis: "SEMIFINAIS",
+      estado_guardado_si: "Você tem uma predição salva",
+      estado_guardado_no: "Você ainda não tem uma predição salva",
+      error_analisis: "Não foi possível gerar a análise agora. Pode ser um problema de conexão ou do serviço. Tente novamente em alguns segundos.",
+      prompt_sistema: `Você é um analista de futebol especialista, falando português, conversando com um usuário que preencheu uma predição de chaveamento da Copa do Mundo 2026. Você tem acesso à busca na web: use-a para verificar rankings FIFA atuais, forma recente das seleções, lesões relevantes, e qualquer notícia que ajude a avaliar a predição.
+
+Dê uma análise honesta mas amigável, sem garantir resultados futuros (deixe claro que o futebol é imprevisível). Estruture sua resposta em markdown simples com: uma seção "### Resumo geral" (2-3 linhas), uma seção "### Os pontos mais sólidos da sua predição" (lista de 2-4 pontos), uma seção "### As apostas mais arriscadas" (lista de 2-4 pontos), e uma seção final "### Seu campeão" comentando a viabilidade do campeão escolhido. Seja conciso, no máximo 300 palavras.
+
+MUITO IMPORTANTE: ao final da sua resposta, adicione um bloco delimitado EXATAMENTE assim, sem nada além de um JSON válido (sem comentários, sem texto extra), com uma porcentagem de probabilidade de 1 a 99 para CADA uma das 32 partidas fornecidas (incluindo a disputa de terceiro lugar), avaliando o quão provável é, com base nos dados encontrados, que o time escolhido pelo usuário realmente vença essa partida específica:
+
+[[[JSON_PROBABILIDADES]]]
+{"r1":[n1,n2,...,n16],"r2":[n1,...,n8],"r3":[n1,...,n4],"r4":[n1,n2],"r5":[n1],"tercer":[n1]}
+[[[FIN_JSON_PROBABILIDADES]]]
+
+Cada array deve ter exatamente o número de partidas dessa rodada, na mesma ordem fornecida. Use números inteiros de 1 a 99.`,
+      prompt_usuario: (resumen)=> `Aqui está minha predição completa do chaveamento da Copa do Mundo 2026:\n\n${resumen}\n\nAnalise o quão realista ela é, com base em dados atuais que você possa buscar, e não se esqueça do bloco JSON de probabilidades ao final.`,
+
+      btn_partido_suelto: "🔍 Adivinhar uma partida específica",
+      titulo_partido_suelto: "🔍 Adivinhar uma partida específica",
+      elige_equipo_a: "Escolha o primeiro time",
+      elige_equipo_b: "Escolha o segundo time",
+      btn_confirmar_partido: "Escolher esta partida",
+      instruccion_pick_suelto: "Clique no time que você acha que vai vencer",
+      texto_zona_analisis_suelto: "Uma IA pode revisar sua escolha com base em dados atuais e dar sua opinião.",
+      btn_otro_partido: "↺ Escolher outra partida",
+      error_mismo_equipo: "Escolha dois times diferentes.",
+      btn_actualidad: "📰 Atualidade",
+      btn_actualidad_cargando: "Buscando resultados reais...",
+      tiempo_espera_actualidad: "Isso pode levar de 15 a 30 segundos",
+      modal_resultados_pregunta: "Você quer ver o placar exato das partidas já disputadas?",
+      modal_resultados_si: "Sim, mostrar resultados",
+      modal_resultados_no: "Não, só quem avançou",
+      etiqueta_jugado: "JÁ JOGADO",
+      etiqueta_acertaste: "✓ Você acertou",
+      etiqueta_fallaste: "✗ Você errou",
+      error_actualidad: "Não foi possível buscar a atualidade do torneio agora. Tente novamente em alguns segundos.",
+      prompt_sistema_actualidad: `Você é um assistente que pesquisa resultados reais e oficiais de partidas da Copa do Mundo 2026 (o torneio já está em andamento). Você tem acesso à busca na web: use-a para encontrar, entre as partidas que vou listar, quais JÁ FORAM DISPUTADAS na realidade até hoje, e qual foi o resultado real (time vencedor e placar exato). Responda APENAS com um bloco JSON, sem texto antes ou depois, exatamente neste formato (use os códigos de país de 2-3 letras dados entre parênteses ao lado de cada time; se uma partida AINDA NÃO foi disputada, não a inclua no array):
+
+[[[JSON_RESULTADOS]]]
+{"resultados":[{"r1_index":0,"ganador_code":"de","marcador":"2-1"}]}
+[[[FIN_JSON_RESULTADOS]]]
+
+r1_index é a posição da partida na lista fornecida (começando em 0). ganador_code é o código do time vencedor. marcador é o placar final no formato "X-Y" a favor do vencedor (se decidido nos pênaltis, adicione isso, ex "1-1 (4-3 pen)").`,
+      prompt_usuario_actualidad: (lista)=> `Aqui está a lista das partidas de dezesseis avos de final da Copa do Mundo 2026, em ordem (índice 0 em diante):\n\n${lista}\n\nBusque quais já foram disputadas na realidade e me dê o JSON com os resultados reais.`
+    },
+    de: {
+      titulo_h1_pre: "WM-",
+      titulo_h1_span: "Vorhersage",
+      titulo_h2_pre: "WM-",
+      subtitulo_inicio: "Wähle den Sieger jedes Spiels und bringe dein Turnierraster bis ins Finale",
+      btn_nueva: "Neue Vorhersage",
+      btn_continuar: "Vorhersage fortsetzen",
+      btn_topbar_inicio: "Start",
+      btn_topbar_reiniciar: "Zurücksetzen",
+      progreso_texto: (n,t)=> `${n} / ${t} Spiele festgelegt`,
+      texto_zona_analisis: "Wenn du deine gesamte Vorhersage fertig hast, kann eine KI deine 31 Tipps mit aktuellen Daten (Rankings, aktuelle Form, Nachrichten) vergleichen und dir ihre Einschätzung geben.",
+      btn_analizar: "🔮 Meine Vorhersage analysieren",
+      btn_analizar_cargando: "Daten werden gesucht und analysiert...",
+      tiempo_espera: "Das kann etwa 15–30 Sekunden dauern",
+      toast_guardado: "Gespeichert ✓",
+      toast_reiniciado: "Vorhersage zurückgesetzt",
+      modal_reiniciar_texto: "Bist du sicher, dass du deine Vorhersage zurücksetzen möchtest? Der gesamte gespeicherte Fortschritt wird gelöscht.",
+      modal_cancelar: "Abbrechen",
+      modal_si_reiniciar: "Ja, zurücksetzen",
+      modal_analisis_titulo: "🔮 Analyse deiner Vorhersage",
+      titulo_final: "FINALE",
+      titulo_tercer: "SPIEL UM PLATZ 3",
+      por_definir: "Noch offen",
+      tit_dieciseisavos: "32ER-RUNDE",
+      tit_octavos: "ACHTELFINALE",
+      tit_cuartos: "VIERTELFINALE",
+      tit_semis: "HALBFINALE",
+      estado_guardado_si: "Du hast eine gespeicherte Vorhersage",
+      estado_guardado_no: "Du hast noch keine gespeicherte Vorhersage",
+      error_analisis: "Die Analyse konnte gerade nicht erstellt werden. Es könnte ein Verbindungs- oder Dienstproblem sein. Versuche es in ein paar Sekunden erneut.",
+      prompt_sistema: `Du bist ein erfahrener Fußballanalyst, der Deutsch spricht und mit einem Nutzer spricht, der eine Turnierraster-Vorhersage für die WM 2026 ausgefüllt hat. Du hast Zugriff auf Websuche: nutze sie, um aktuelle FIFA-Ranglisten, die jüngste Form der Mannschaften, relevante Verletzungen und alle Nachrichten zu prüfen, die bei der Bewertung der Vorhersage helfen.
+
+Gib eine ehrliche, aber freundliche Analyse ab, ohne zukünftige Ergebnisse zu garantieren (mache klar, dass Fußball unvorhersehbar ist). Strukturiere deine Antwort in einfachem Markdown mit: einem Abschnitt "### Allgemeine Zusammenfassung" (2-3 Zeilen), einem Abschnitt "### Die stärksten Teile deiner Vorhersage" (Liste mit 2-4 Punkten), einem Abschnitt "### Die riskantesten Tipps" (Liste mit 2-4 Punkten), und einem abschließenden Abschnitt "### Dein Champion", der kommentiert, wie realistisch der gewählte Champion ist. Sei prägnant, nicht mehr als 300 Wörter.
+
+SEHR WICHTIG: Füge am Ende deiner Antwort einen Block hinzu, der GENAU so begrenzt ist, mit nichts anderem darin als gültigem JSON (keine Kommentare, kein zusätzlicher Text), mit einer Wahrscheinlichkeit von 1 bis 99 für JEDES der 32 übergebenen Spiele (einschließlich des Spiels um Platz 3), die bewertet, wie wahrscheinlich es laut den gefundenen Daten ist, dass die vom Nutzer als Sieger gewählte Mannschaft dieses konkrete Spiel tatsächlich gewinnt:
+
+[[[JSON_PROBABILIDADES]]]
+{"r1":[n1,n2,...,n16],"r2":[n1,...,n8],"r3":[n1,...,n4],"r4":[n1,n2],"r5":[n1],"tercer":[n1]}
+[[[FIN_JSON_PROBABILIDADES]]]
+
+Jedes Array muss genau die Anzahl der Spiele dieser Runde haben, in derselben Reihenfolge wie übergeben. Verwende ganze Zahlen von 1 bis 99.`,
+      prompt_usuario: (resumen)=> `Hier ist meine vollständige WM-2026-Turnierraster-Vorhersage:\n\n${resumen}\n\nAnalysiere, wie realistisch sie ist, basierend auf aktuellen Daten, die du suchen kannst, und vergiss den JSON-Wahrscheinlichkeitsblock am Ende nicht.`,
+
+      btn_partido_suelto: "🔍 Ein bestimmtes Spiel tippen",
+      titulo_partido_suelto: "🔍 Ein bestimmtes Spiel tippen",
+      elige_equipo_a: "Wähle die erste Mannschaft",
+      elige_equipo_b: "Wähle die zweite Mannschaft",
+      btn_confirmar_partido: "Dieses Spiel auswählen",
+      instruccion_pick_suelto: "Klicke auf die Mannschaft, die deiner Meinung nach gewinnt",
+      texto_zona_analisis_suelto: "Eine KI kann deine Wahl mit aktuellen Daten vergleichen und ihre Einschätzung geben.",
+      btn_otro_partido: "↺ Ein anderes Spiel wählen",
+      error_mismo_equipo: "Wähle zwei unterschiedliche Mannschaften.",
+      btn_actualidad: "📰 Aktuelles",
+      btn_actualidad_cargando: "Echte Ergebnisse werden gesucht...",
+      tiempo_espera_actualidad: "Das kann etwa 15–30 Sekunden dauern",
+      modal_resultados_pregunta: "Möchtest du das genaue Ergebnis der bereits gespielten Spiele sehen?",
+      modal_resultados_si: "Ja, Ergebnisse anzeigen",
+      modal_resultados_no: "Nein, nur wer weitergekommen ist",
+      etiqueta_jugado: "BEREITS GESPIELT",
+      etiqueta_acertaste: "✓ Du lagst richtig",
+      etiqueta_fallaste: "✗ Du lagst falsch",
+      error_actualidad: "Die aktuellen Turnierdaten konnten gerade nicht abgerufen werden. Versuche es in ein paar Sekunden erneut.",
+      prompt_sistema_actualidad: `Du bist ein Assistent, der echte, offizielle Ergebnisse von WM-2026-Spielen recherchiert (das Turnier läuft bereits). Du hast Zugriff auf Websuche: nutze sie, um unter den Spielen, die ich dir gleich auflisten werde, herauszufinden, welche bereits in der Realität bis heute gespielt wurden, und wie das tatsächliche Ergebnis war (Siegerteam und genaues Ergebnis). Antworte NUR mit einem JSON-Block, ohne Text davor oder danach, exakt in diesem Format (verwende die 2-3-Buchstaben-Ländercodes, die neben jeder Mannschaft in Klammern stehen; wenn ein Spiel noch NICHT gespielt wurde, lass es im Array weg):
+
+[[[JSON_RESULTADOS]]]
+{"resultados":[{"r1_index":0,"ganador_code":"de","marcador":"2-1"}]}
+[[[FIN_JSON_RESULTADOS]]]
+
+r1_index ist die Position des Spiels in der übergebenen Liste (beginnend bei 0). ganador_code ist der Code der siegreichen Mannschaft. marcador ist das Endergebnis im Format "X-Y" zugunsten des Siegers (bei Elfmeterschießen ergänzen, z.B. "1-1 (4-3 i.E.)").`,
+      prompt_usuario_actualidad: (lista)=> `Hier ist die Liste der WM-2026-Spiele der Runde der letzten 32, in Reihenfolge (Index 0 aufwärts):\n\n${lista}\n\nFinde heraus, welche bereits in der Realität gespielt wurden, und gib mir das JSON mit den echten Ergebnissen.`
+    }
+  };
+
+
+  function t(clave, ...args){
+    const dict = TEXTOS[idiomaActual] || TEXTOS.es;
+    const val = dict[clave];
+    if(typeof val === "function") return val(...args);
+    return val !== undefined ? val : clave;
+  }
+
+  function aplicarIdiomaAlDOM(){
+    document.querySelectorAll("[data-i18n]").forEach(el=>{
+      const clave = el.getAttribute("data-i18n");
+      const traduccion = t(clave);
+      if(typeof traduccion === "string"){
+        // Si el elemento tiene hijos con su propio data-i18n (como el <span> dentro de h1), solo tocamos el primer nodo de texto
+        if(el.children.length > 0){
+          for(const nodo of el.childNodes){
+            if(nodo.nodeType === Node.TEXT_NODE && nodo.textContent.trim() !== ""){
+              nodo.textContent = traduccion;
+              break;
+            }
+          }
+        } else {
+          el.textContent = traduccion;
+        }
+      }
+    });
+    document.getElementById("selector-idioma-inicio").value = idiomaActual;
+    document.getElementById("selector-idioma-bracket").value = idiomaActual;
+    document.getElementById("selector-idioma-suelto").value = idiomaActual;
+    document.documentElement.lang = idiomaActual;
+  }
+
+  async function cambiarIdioma(nuevoIdioma){
+    if(!TEXTOS[nuevoIdioma]) return;
+    idiomaActual = nuevoIdioma;
+    try{ await window.storage.set(CLAVE_IDIOMA, idiomaActual, false); }catch(e){}
+    aplicarIdiomaAlDOM();
+    // Si ya estamos en el bracket, hay que re-renderizar para traducir nombres de equipos y títulos generados por JS
+    if(document.getElementById("pantalla-bracket").style.display !== "none"){
+      render();
+    }
+    actualizarPantallaInicio();
+  }
+
+
+  async function cargarIdiomaGuardado(){
+    try{
+      const r = await window.storage.get(CLAVE_IDIOMA, false);
+      if(r && r.value && TEXTOS[r.value]) idiomaActual = r.value;
+    }catch(e){}
+    aplicarIdiomaAlDOM();
+  }
+
+  // ---------- BANDERAS (SVG inline, no dependen de internet) ----------
+  const BANDERAS_SVG = {
+    "de": `<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="0.0" width="60" height="13.33" fill="#000000"/><rect x="0" y="13.33" width="60" height="13.33" fill="#DD0000"/><rect x="0" y="26.67" width="60" height="13.33" fill="#FFCE00"/></svg>`,
+    "py": `<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="0.0" width="60" height="13.33" fill="#D52B1E"/><rect x="0" y="13.33" width="60" height="13.33" fill="#FFFFFF"/><rect x="0" y="26.67" width="60" height="13.33" fill="#0038A8"/></svg>`,
+    "fr": `<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><rect x="0.0" y="0" width="20.0" height="40" fill="#0055A4"/><rect x="20.0" y="0" width="20.0" height="40" fill="#FFFFFF"/><rect x="40.0" y="0" width="20.0" height="40" fill="#EF4135"/></svg>`,
+    "se": `<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><rect width="60" height="40" fill="#006AA7"/><rect x="20" width="8" height="40" fill="#FECC02"/><rect y="16" width="60" height="8" fill="#FECC02"/></svg>`,
+    "za": `<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg">
+  <rect width="60" height="40" fill="#FFFFFF"/>
+  <rect width="60" height="13.3" fill="#002395"/>
+  <rect y="26.7" width="60" height="13.3" fill="#DE3831"/>
+  <polygon points="0,13.3 25,20 0,26.7" fill="#000000"/>
+  <polygon points="0,16 22,20 0,24" fill="#FFB81C"/>
+  <polygon points="0,0 28,20 0,40" fill="#007749"/>
+  <polygon points="0,4 24,20 0,36" fill="#FFFFFF"/>
+  <polygon points="0,8 20,20 0,32" fill="#000000"/>
+</svg>`,
+    "ca": `<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg">
+  <rect width="60" height="40" fill="#FFFFFF"/>
+  <rect width="15" height="40" fill="#FF0000"/>
+  <rect x="45" width="15" height="40" fill="#FF0000"/>
+  <path d="M30 10 l2 5 5-2 -2 5 4 3 -4 2 1 5-4-2-2 4-2-4-4 2 1-5-4-2 4-3-2-5 5 2z" fill="#FF0000"/>
+</svg>`,
+    "nl": `<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="0.0" width="60" height="13.33" fill="#AE1C28"/><rect x="0" y="13.33" width="60" height="13.33" fill="#FFFFFF"/><rect x="0" y="26.67" width="60" height="13.33" fill="#21468B"/></svg>`,
+    "ma": `<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg">
+  <rect width="60" height="40" fill="#C1272D"/>
+  <g stroke="#006233" stroke-width="1.5" fill="none">
+    <path d="M30 12 L33 18 L39 18 L34.5 22 L36 28 L30 24.5 L24 28 L25.5 22 L21 18 L27 18 Z"/>
+  </g>
+</svg>`,
+    "pt": `<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg">
+  <rect width="60" height="40" fill="#FF0000"/>
+  <rect width="24" height="40" fill="#006600"/>
+  <circle cx="24" cy="20" r="7" fill="#FFCC00" stroke="#FFFFFF" stroke-width="1"/>
+</svg>`,
+    "hr": `<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="0.0" width="60" height="13.33" fill="#FF0000"/><rect x="0" y="13.33" width="60" height="13.33" fill="#FFFFFF"/><rect x="0" y="26.67" width="60" height="13.33" fill="#171796"/></svg>`,
+    "es": `<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><rect width="60" height="40" fill="#AA151B"/><rect y="10" width="60" height="20" fill="#F1BF00"/></svg>`,
+    "at": `<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="0.0" width="60" height="13.33" fill="#ED2939"/><rect x="0" y="13.33" width="60" height="13.33" fill="#FFFFFF"/><rect x="0" y="26.67" width="60" height="13.33" fill="#ED2939"/></svg>`,
+    "us": `<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg">
+  <rect width="60" height="40" fill="#FFFFFF"/>
+  <rect y="0.0" width="60" height="3.08" fill="#B22234"/><rect y="6.15" width="60" height="3.08" fill="#B22234"/><rect y="12.31" width="60" height="3.08" fill="#B22234"/><rect y="18.46" width="60" height="3.08" fill="#B22234"/><rect y="24.62" width="60" height="3.08" fill="#B22234"/><rect y="30.77" width="60" height="3.08" fill="#B22234"/><rect y="36.92" width="60" height="3.08" fill="#B22234"/>
+  <rect width="26" height="21" fill="#3C3B6E"/>
+</svg>`,
+    "ba": `<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg">
+  <rect width="60" height="40" fill="#002395"/>
+  <polygon points="0,0 18,0 0,40" fill="#FECB00"/>
+  <polygon points="18,0 0,40 8,40" fill="#002395"/>
+</svg>`,
+    "be": `<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><rect x="0.0" y="0" width="20.0" height="40" fill="#000000"/><rect x="20.0" y="0" width="20.0" height="40" fill="#FAE042"/><rect x="40.0" y="0" width="20.0" height="40" fill="#ED2939"/></svg>`,
+    "sn": `<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg">
+  <rect width="20" height="40" fill="#00853F"/>
+  <rect x="20" width="20" height="40" fill="#FDEF42"/>
+  <rect x="40" width="20" height="40" fill="#E31B23"/>
+  <polygon points="30,15 33,23 25,18 35,18 27,23" fill="#00853F"/>
+</svg>`,
+    "br": `<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg">
+  <rect width="60" height="40" fill="#009C3B"/>
+  <polygon points="30,5 55,20 30,35 5,20" fill="#FFDF00"/>
+  <circle cx="30" cy="20" r="9" fill="#002776"/>
+</svg>`,
+    "jp": `<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><rect width="60" height="40" fill="#FFFFFF"/><circle cx="30" cy="20" r="9" fill="#BC002D"/></svg>`,
+    "ci": `<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><rect x="0.0" y="0" width="20.0" height="40" fill="#FF8200"/><rect x="20.0" y="0" width="20.0" height="40" fill="#FFFFFF"/><rect x="40.0" y="0" width="20.0" height="40" fill="#009E60"/></svg>`,
+    "no": `<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><rect width="60" height="40" fill="#EF2B2D"/><rect x="18" width="8" height="40" fill="#FFFFFF"/><rect y="16" width="60" height="8" fill="#FFFFFF"/><rect x="20" width="4" height="40" fill="#002868"/><rect y="18" width="60" height="4" fill="#002868"/></svg>`,
+    "mx": `<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg">
+  <rect width="20" height="40" fill="#006847"/>
+  <rect x="20" width="20" height="40" fill="#FFFFFF"/>
+  <rect x="40" width="20" height="40" fill="#CE1126"/>
+  <circle cx="30" cy="20" r="5" fill="#8B5A2B"/>
+</svg>`,
+    "ec": `<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg">
+  <rect width="60" height="20" fill="#FFDD00"/>
+  <rect y="20" width="60" height="10" fill="#0F47AF"/>
+  <rect y="30" width="60" height="10" fill="#E0392B"/>
+  <circle cx="30" cy="20" r="6" fill="#FFFFFF" stroke="#8B5A2B" stroke-width="1"/>
+</svg>`,
+    "co": `<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="0.0" width="60" height="13.33" fill="#FCD116"/><rect x="0" y="13.33" width="60" height="13.33" fill="#003893"/><rect x="0" y="26.67" width="60" height="13.33" fill="#CE1126"/></svg>`,
+    "gb-eng": `<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><rect width="60" height="40" fill="#FFFFFF"/><rect y="16" width="60" height="8" fill="#CE1124"/><rect x="26" width="8" height="40" fill="#CE1124"/></svg>`,
+    "cd": `<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg">
+  <rect width="60" height="40" fill="#007FFF"/>
+  <polygon points="0,40 18,40 0,22" fill="#CE1021"/>
+  <polygon points="0,40 16,40 0,24" fill="#F7D618"/>
+  <polygon points="30,8 33,16 41,16 35,21 37,29 30,24 23,29 25,21 19,16 27,16" fill="#F7D618"/>
+</svg>`,
+    "ar": `<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg">
+  <rect width="60" height="13.3" fill="#75AADB"/>
+  <rect y="13.3" width="60" height="13.3" fill="#FFFFFF"/>
+  <rect y="26.7" width="60" height="13.3" fill="#75AADB"/>
+  <circle cx="30" cy="20" r="4.5" fill="#F6B40E" stroke="#85340A" stroke-width="0.5"/>
+</svg>`,
+    "cv": `<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg">
+  <rect width="60" height="40" fill="#003893"/>
+  <rect y="22" width="60" height="4" fill="#FFFFFF"/>
+  <rect y="26" width="60" height="2" fill="#CF2027"/>
+  <rect y="28" width="60" height="2" fill="#FFFFFF"/>
+  <g fill="#F7D116">
+    <circle cx="20" cy="14" r="1.4"/><circle cx="25" cy="10" r="1.4"/><circle cx="31" cy="8" r="1.4"/>
+    <circle cx="37" cy="9" r="1.4"/><circle cx="42" cy="12" r="1.4"/>
+    <circle cx="46" cy="17" r="1.4"/><circle cx="46" cy="23" r="1.4"/><circle cx="42" cy="28" r="1.4"/>
+    <circle cx="37" cy="31" r="1.4"/><circle cx="31" cy="32" r="1.4"/>
+  </g>
+</svg>`,
+    "au": `<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg">
+  <rect width="60" height="40" fill="#00008B"/>
+  <path d="M0,0 L12,0 L0,8 Z M30,0 L18,0 L30,8 Z M0,20 L12,20 L0,12 Z M30,20 L18,20 L30,12 Z" fill="#FFFFFF"/>
+  <rect x="9" width="3" height="20" fill="#FFFFFF"/>
+  <rect width="30" height="3" y="8.5" fill="#FFFFFF"/>
+  <g fill="#FFFFFF">
+    <circle cx="45" cy="10" r="2"/><circle cx="50" cy="25" r="2"/><circle cx="42" cy="30" r="1.6"/>
+    <circle cx="52" cy="13" r="1.4"/><circle cx="38" cy="20" r="1.3"/>
+  </g>
+</svg>`,
+    "eg": `<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="0.0" width="60" height="13.33" fill="#CE1126"/><rect x="0" y="13.33" width="60" height="13.33" fill="#FFFFFF"/><rect x="0" y="26.67" width="60" height="13.33" fill="#000000"/></svg>`,
+    "ch": `<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><rect width="60" height="40" fill="#FF0000"/><rect x="26" y="12" width="8" height="16" fill="#FFFFFF"/><rect x="20" y="18" width="20" height="4" fill="#FFFFFF"/></svg>`,
+    "dz": `<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg">
+  <rect width="30" height="40" fill="#006233"/>
+  <rect x="30" width="30" height="40" fill="#FFFFFF"/>
+  <path d="M33 20 a7 7 0 1 0 7 -7 a5.5 5.5 0 1 1 -7 7 Z" fill="#D21034"/>
+  <polygon points="40,12 41.5,16.5 46.2,16.5 42.5,19.2 43.8,23.8 40,21 36.2,23.8 37.5,19.2 33.8,16.5 38.5,16.5" fill="#D21034"/>
+</svg>`,
+    "gh": `<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg">
+  <rect width="60" height="13.3" fill="#CE1126"/>
+  <rect y="13.3" width="60" height="13.3" fill="#FCD116"/>
+  <rect y="26.7" width="60" height="13.3" fill="#006B3F"/>
+  <polygon points="30,15 33,23 25,18 35,18 27,23" fill="#000000"/>
+</svg>`
+  };
+
+  // ---------- DATOS BASE (32 equipos, orden idéntico a la imagen) ----------
+  // Cada entrada: "Nombre:codigo" (código usado para buscar el SVG en BANDERAS_SVG)
+  const EQUIPOS_FINAL = [
+    "Alemania:de","Paraguay:py",
+    "Francia:fr","Suecia:se",
+    "Sudáfrica:za","Canadá:ca",
+    "Países Bajos:nl","Marruecos:ma",
+    "Portugal:pt","Croacia:hr",
+    "España:es","Austria:at",
+    "Estados Unidos:us","Bosnia y Herzegovina:ba",
+    "Bélgica:be","Senegal:sn",
+    "Brasil:br","Japón:jp",
+    "Costa de Marfil:ci","Noruega:no",
+    "México:mx","Ecuador:ec",
+    "Inglaterra:gb-eng","RD del Congo:cd",
+    "Argentina:ar","Cabo Verde:cv",
+    "Australia:au","Egipto:eg",
+    "Suiza:ch","Argelia:dz",
+    "Colombia:co","Ghana:gh"
+  ].map(s=>{
+    const idx = s.lastIndexOf(":");
+    return { nombre: s.slice(0,idx), code: s.slice(idx+1) };
+  });
+
+  const NOMBRES_EQUIPOS_EN = {
+    "de":"Germany","py":"Paraguay","fr":"France","se":"Sweden",
+    "za":"South Africa","ca":"Canada","nl":"Netherlands","ma":"Morocco",
+    "pt":"Portugal","hr":"Croatia","es":"Spain","at":"Austria",
+    "us":"United States","ba":"Bosnia and Herzegovina","be":"Belgium","sn":"Senegal",
+    "br":"Brazil","jp":"Japan","ci":"Ivory Coast","no":"Norway",
+    "mx":"Mexico","ec":"Ecuador","gb-eng":"England","cd":"DR Congo",
+    "ar":"Argentina","cv":"Cape Verde","au":"Australia","eg":"Egypt",
+    "ch":"Switzerland","dz":"Algeria","co":"Colombia","gh":"Ghana"
+  };
+
+  const NOMBRES_EQUIPOS_FR = {
+    "de":"Allemagne","py":"Paraguay","fr":"France","se":"Suède",
+    "za":"Afrique du Sud","ca":"Canada","nl":"Pays-Bas","ma":"Maroc",
+    "pt":"Portugal","hr":"Croatie","es":"Espagne","at":"Autriche",
+    "us":"États-Unis","ba":"Bosnie-Herzégovine","be":"Belgique","sn":"Sénégal",
+    "br":"Brésil","jp":"Japon","ci":"Côte d'Ivoire","no":"Norvège",
+    "mx":"Mexique","ec":"Équateur","gb-eng":"Angleterre","cd":"RD Congo",
+    "ar":"Argentine","cv":"Cap-Vert","au":"Australie","eg":"Égypte",
+    "ch":"Suisse","dz":"Algérie","co":"Colombie","gh":"Ghana"
+  };
+
+  const NOMBRES_EQUIPOS_PT = {
+    "de":"Alemanha","py":"Paraguai","fr":"França","se":"Suécia",
+    "za":"África do Sul","ca":"Canadá","nl":"Países Baixos","ma":"Marrocos",
+    "pt":"Portugal","hr":"Croácia","es":"Espanha","at":"Áustria",
+    "us":"Estados Unidos","ba":"Bósnia e Herzegovina","be":"Bélgica","sn":"Senegal",
+    "br":"Brasil","jp":"Japão","ci":"Costa do Marfim","no":"Noruega",
+    "mx":"México","ec":"Equador","gb-eng":"Inglaterra","cd":"RD Congo",
+    "ar":"Argentina","cv":"Cabo Verde","au":"Austrália","eg":"Egito",
+    "ch":"Suíça","dz":"Argélia","co":"Colômbia","gh":"Gana"
+  };
+
+  const NOMBRES_EQUIPOS_DE = {
+    "de":"Deutschland","py":"Paraguay","fr":"Frankreich","se":"Schweden",
+    "za":"Südafrika","ca":"Kanada","nl":"Niederlande","ma":"Marokko",
+    "pt":"Portugal","hr":"Kroatien","es":"Spanien","at":"Österreich",
+    "us":"USA","ba":"Bosnien und Herzegowina","be":"Belgien","sn":"Senegal",
+    "br":"Brasilien","jp":"Japan","ci":"Elfenbeinküste","no":"Norwegen",
+    "mx":"Mexiko","ec":"Ecuador","gb-eng":"England","cd":"DR Kongo",
+    "ar":"Argentinien","cv":"Kap Verde","au":"Australien","eg":"Ägypten",
+    "ch":"Schweiz","dz":"Algerien","co":"Kolumbien","gh":"Ghana"
+  };
+
+  const NOMBRES_EQUIPOS_POR_IDIOMA = {
+    en: NOMBRES_EQUIPOS_EN,
+    fr: NOMBRES_EQUIPOS_FR,
+    pt: NOMBRES_EQUIPOS_PT,
+    de: NOMBRES_EQUIPOS_DE
+  };
+
+  function nombreEquipo(equipo){
+    if(!equipo) return "";
+    const diccionario = NOMBRES_EQUIPOS_POR_IDIOMA[idiomaActual];
+    if(diccionario) return diccionario[equipo.code] || equipo.nombre;
+    return equipo.nombre;
+  }
+
+  function banderaSvg(code){
+    return BANDERAS_SVG[code] || `<svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg"><rect width="60" height="40" fill="#888"/></svg>`;
+  }
+
+  // ---------- ESTRUCTURA DEL BRACKET ----------
+  // Rondas: 0=Dieciseisavos(16 partidos en 2 bloques de 8... realmente son 16 equipos -> 8 partidos por lado = 16 total)
+  // Lado izq: partidos 0-7, lado der: partidos 8-15 (dieciseisavos = 16 partidos? No: 32 equipos = 16 partidos en ronda 1)
+  // Ronda 1 (dieciseisavos): 16 partidos -> 16 ganadores
+  // Ronda 2 (octavos): 8 partidos
+  // Ronda 3 (cuartos): 4 partidos
+  // Ronda 4 (semis): 2 partidos
+  // Ronda 5 (final): 1 partido
+  // + tercer lugar (derivado de perdedores de semis)
+
+  const NUM_R1 = 16;
+
+  function construirEstadoInicial(){
+    const estado = {
+      r1: Array.from({length:NUM_R1}, (_,i)=>({
+        a: EQUIPOS_FINAL[i*2],
+        b: EQUIPOS_FINAL[i*2+1],
+        ganador: null,
+        _r1idx: i
+      })),
+      r2: Array.from({length:8}, ()=>({a:null,b:null,ganador:null})),
+      r3: Array.from({length:4}, ()=>({a:null,b:null,ganador:null})),
+      r4: Array.from({length:2}, ()=>({a:null,b:null,ganador:null})),
+      r5: {a:null,b:null,ganador:null},
+      tercer: {a:null,b:null,ganador:null},
+      resultadosReales: {} // mapea "r1_<index>" -> { ganador_code, marcador }
+    };
+    return estado;
+  }
+
+  let estado = construirEstadoInicial();
+  let huboAnalisis = false; // true cuando ya se hizo un análisis y hay probabilidades que mostrar
+  let modoAnalisisActivo = "bracket"; // "bracket" o "suelto", para saber qué re-renderizar al cerrar el modal
+
+  // Estado del modo "partido suelto" (Adivinar partido en específico)
+  let partidoSuelto = { a: null, b: null, ganador: null, probabilidad: null };
+
+  // Estado de resultados reales (Actualidad)
+  let mostrarMarcadores = false; // true/false según el usuario eligió ver marcadores
+
+  // ---------- PERSISTENCIA ----------
+  const CLAVE = "mundial_prediccion_v1";
+
+  async function hayGuardado(){
+    try{
+      const r = await window.storage.get(CLAVE, false);
+      return !!(r && r.value);
+    }catch(e){ return false; }
+  }
+
+  async function cargarGuardado(){
+    try{
+      const r = await window.storage.get(CLAVE, false);
+      if(r && r.value){
+        estado = JSON.parse(r.value);
+        return true;
+      }
+    }catch(e){}
+    return false;
+  }
+
+  let guardarTimeout = null;
+  async function guardarEstado(mostrarToast){
+    try{
+      const ok = await window.storage.set(CLAVE, JSON.stringify(estado), false);
+      if(ok && mostrarToast) mostrarToastUI(t("toast_guardado"));
+    }catch(e){
+      console.error("No se pudo guardar:", e);
+    }
+  }
+
+  function guardarConDebounce(){
+    if(guardarTimeout) clearTimeout(guardarTimeout);
+    guardarTimeout = setTimeout(()=>guardarEstado(true), 300);
+  }
+
+  async function borrarGuardado(){
+    try{ await window.storage.delete(CLAVE, false); }catch(e){}
+  }
+
+  // ---------- LÓGICA DE PROPAGACIÓN ----------
+  function propagar(){
+    // R1 -> R2 (izq: partidos 0-7 -> r2[0-3]... en realidad el bracket tiene 2 mitades de 8 partidos cada una)
+    // Mitad izquierda: r1[0..7] -> r2[0..3]; Mitad derecha: r1[8..15] -> r2[4..7]
+    for(let i=0;i<8;i++){
+      const p = estado.r1[i];
+      const destino = estado.r2[Math.floor(i/2)];
+      if(i%2===0) destino.a = p.ganador; else destino.b = p.ganador;
+    }
+    for(let i=8;i<16;i++){
+      const p = estado.r1[i];
+      const destino = estado.r2[4+Math.floor((i-8)/2)];
+      if((i-8)%2===0) destino.a = p.ganador; else destino.b = p.ganador;
+    }
+    // Limpiar ganadores de r2 si sus equipos ya no coinciden
+    estado.r2.forEach(p=>{
+      if(p.ganador && p.ganador!==p.a && p.ganador!==p.b){ p.ganador=null; delete p.probabilidad; }
+    });
+
+    // R2 -> R3 : izq r2[0..3] -> r3[0..1]; der r2[4..7] -> r3[2..3]
+    for(let i=0;i<4;i++){
+      const p = estado.r2[i];
+      const destino = estado.r3[Math.floor(i/2)];
+      if(i%2===0) destino.a = p.ganador; else destino.b = p.ganador;
+    }
+    for(let i=4;i<8;i++){
+      const p = estado.r2[i];
+      const destino = estado.r3[2+Math.floor((i-4)/2)];
+      if((i-4)%2===0) destino.a = p.ganador; else destino.b = p.ganador;
+    }
+    estado.r3.forEach(p=>{
+      if(p.ganador && p.ganador!==p.a && p.ganador!==p.b){ p.ganador=null; delete p.probabilidad; }
+    });
+
+    // R3 -> R4 : izq r3[0..1] -> r4[0]; der r3[2..3] -> r4[1]
+    estado.r4[0].a = estado.r3[0].ganador;
+    estado.r4[0].b = estado.r3[1].ganador;
+    estado.r4[1].a = estado.r3[2].ganador;
+    estado.r4[1].b = estado.r3[3].ganador;
+    estado.r4.forEach(p=>{
+      if(p.ganador && p.ganador!==p.a && p.ganador!==p.b){ p.ganador=null; delete p.probabilidad; }
+    });
+
+    // R4 -> R5 (final) + tercer lugar (perdedores de semis)
+    estado.r5.a = estado.r4[0].ganador;
+    estado.r5.b = estado.r4[1].ganador;
+    if(estado.r5.ganador && estado.r5.ganador!==estado.r5.a && estado.r5.ganador!==estado.r5.b){
+      estado.r5.ganador = null;
+      delete estado.r5.probabilidad;
+    }
+
+    function perdedor(p){
+      if(!p.ganador) return null;
+      if(equipoIgual(p.ganador,p.a)) return p.b;
+      if(equipoIgual(p.ganador,p.b)) return p.a;
+      return null;
+    }
+    estado.tercer.a = perdedor(estado.r4[0]);
+    estado.tercer.b = perdedor(estado.r4[1]);
+    if(estado.tercer.ganador && estado.tercer.ganador!==estado.tercer.a && estado.tercer.ganador!==estado.tercer.b){
+      estado.tercer.ganador = null;
+      delete estado.tercer.probabilidad;
+    }
+  }
+
+  function equipoIgual(x,y){
+    if(!x || !y) return false;
+    return x.nombre===y.nombre && x.code===y.code;
+  }
+
+  function elegirGanador(partido, equipoElegido){
+    if(!equipoElegido) return;
+    // Si ya era el ganador, permitir des-seleccionar (toggle) para corregir
+    if(partido.ganador && equipoIgual(partido.ganador, equipoElegido)){
+      partido.ganador = null;
+    } else {
+      partido.ganador = equipoElegido;
+    }
+    delete partido.probabilidad; // el % anterior ya no aplica si el pick cambió
+    propagar();
+    render();
+    guardarConDebounce();
+  }
+
+  // ---------- RENDER ----------
+  function tarjetaEquipo(partido, equipo, lado){
+    if(!equipo){
+      const div = document.createElement("div");
+      div.className = "equipo vacio";
+      div.textContent = t("por_definir");
+      return div;
+    }
+    const div = document.createElement("div");
+    const esGanador = partido.ganador && equipoIgual(partido.ganador, equipo);
+    const hayGanadorYNoEsEste = partido.ganador && !esGanador;
+
+    let claseColor = "";
+    let badgeHTML = "";
+    let claseJugado = "";
+
+    // Resultado real (solo aplica a partidos de dieciseisavos, que tienen _r1idx)
+    let infoReal = null;
+    if(typeof partido._r1idx === "number" && estado.resultadosReales){
+      infoReal = estado.resultadosReales["r1_" + partido._r1idx] || null;
+    }
+
+    if(infoReal && esGanador){
+      const acerto = equipo.code === infoReal.ganador_code;
+      claseJugado = acerto ? " jugado-acerto" : " jugado-fallo";
+      const etiquetaTexto = acerto ? t("etiqueta_acertaste") : t("etiqueta_fallaste");
+      const marcadorTexto = (mostrarMarcadores && infoReal.marcador) ? `<span class="marcador-jugado">${infoReal.marcador}</span>` : "";
+      badgeHTML = `<span class="etiqueta-jugado">${etiquetaTexto}</span>${marcadorTexto}`;
+    } else if(esGanador && typeof partido.probabilidad === "number"){
+      const pct = partido.probabilidad;
+      claseColor = pct >= 50 ? " prob-alta" : " prob-baja";
+      const nombreLargo = nombreEquipo(equipo).length > 14;
+      badgeHTML = `<span class="porcentaje-badge${nombreLargo ? " afuera" : ""}">${pct}%</span>`;
+    }
+
+    div.className = "equipo" + (esGanador ? " ganador" + claseColor + claseJugado : "") + (hayGanadorYNoEsEste ? " perdedor" : "");
+    div.innerHTML = `<span class="bandera">${banderaSvg(equipo.code)}</span><span class="nombre-equipo">${nombreEquipo(equipo)}</span>${badgeHTML}`;
+    div.addEventListener("click", ()=> elegirGanador(partido, equipo));
+    return div;
+  }
+
+  function tarjetaPartido(partido){
+    const cont = document.createElement("div");
+    cont.className = "partido";
+    cont.appendChild(tarjetaEquipo(partido, partido.a, "a"));
+    cont.appendChild(tarjetaEquipo(partido, partido.b, "b"));
+    return cont;
+  }
+
+  function columna(partidos){
+    const col = document.createElement("div");
+    col.className = "col";
+    partidos.forEach(p=> col.appendChild(tarjetaPartido(p)));
+    return col;
+  }
+
+  // ---------- MODO: ADIVINAR PARTIDO EN ESPECÍFICO ----------
+  function llenarSelectsPartidoSuelto(){
+    const selA = document.getElementById("select-equipo-a");
+    const selB = document.getElementById("select-equipo-b");
+    selA.innerHTML = "";
+    selB.innerHTML = "";
+    EQUIPOS_FINAL.forEach((eq, idx)=>{
+      const optA = document.createElement("option");
+      optA.value = idx;
+      optA.textContent = nombreEquipo(eq);
+      selA.appendChild(optA);
+      const optB = document.createElement("option");
+      optB.value = idx;
+      optB.textContent = nombreEquipo(eq);
+      selB.appendChild(optB);
+    });
+    // Por default que no queden iguales
+    selA.selectedIndex = 0;
+    selB.selectedIndex = 1;
+  }
+
+  function irAPartidoSuelto(){
+    document.getElementById("pantalla-inicio").style.display = "none";
+    document.getElementById("pantalla-bracket").style.display = "none";
+    document.getElementById("pantalla-partido-suelto").style.display = "block";
+    partidoSuelto = { a: null, b: null, ganador: null, probabilidad: null };
+    document.getElementById("selector-partido-suelto").style.display = "flex";
+    document.getElementById("resultado-partido-suelto").style.display = "none";
+    llenarSelectsPartidoSuelto();
+  }
+
+  function renderPartidoSuelto(){
+    const cont = document.getElementById("par-partido-suelto");
+    cont.innerHTML = "";
+    const fakePartido = { a: partidoSuelto.a, b: partidoSuelto.b, ganador: partidoSuelto.ganador, probabilidad: partidoSuelto.probabilidad };
+    cont.appendChild(tarjetaEquipoSuelto(fakePartido, partidoSuelto.a));
+    cont.appendChild(tarjetaEquipoSuelto(fakePartido, partidoSuelto.b));
+
+    const zona = document.getElementById("zona-analisis-suelto");
+    zona.style.display = partidoSuelto.ganador ? "flex" : "none";
+  }
+
+  function tarjetaEquipoSuelto(fakePartido, equipo){
+    const div = document.createElement("div");
+    const esGanador = fakePartido.ganador && equipoIgual(fakePartido.ganador, equipo);
+    let claseColor = "";
+    let badgeHTML = "";
+    if(esGanador && typeof fakePartido.probabilidad === "number"){
+      const pct = fakePartido.probabilidad;
+      claseColor = pct >= 50 ? " prob-alta" : " prob-baja";
+      badgeHTML = `<span class="porcentaje-badge">${pct}%</span>`;
+    }
+    div.className = "equipo" + (esGanador ? " ganador" + claseColor : (fakePartido.ganador ? " perdedor" : ""));
+    div.innerHTML = `<span class="bandera">${banderaSvg(equipo.code)}</span><span class="nombre-equipo">${nombreEquipo(equipo)}</span>${badgeHTML}`;
+    div.addEventListener("click", ()=>{
+      partidoSuelto.ganador = equipoIgual(partidoSuelto.ganador, equipo) ? null : equipo;
+      partidoSuelto.probabilidad = null;
+      renderPartidoSuelto();
+    });
+    return div;
+  }
+
+  async function analizarPartidoSuelto(){
+    const btn = document.getElementById("btn-analizar-suelto");
+    const spinner = document.getElementById("spinner-analizar-suelto");
+    const textoBtn = document.getElementById("texto-btn-analizar-suelto");
+    const tiempoEspera = document.getElementById("tiempo-espera-analizar-suelto");
+
+    btn.disabled = true;
+    spinner.classList.add("show");
+    textoBtn.textContent = t("btn_analizar_cargando");
+    tiempoEspera.textContent = t("tiempo_espera");
+    tiempoEspera.style.display = "block";
+
+    const resumen = `Partido único: ${nombreEquipo(partidoSuelto.a)} vs ${nombreEquipo(partidoSuelto.b)} -> ganador elegido: ${nombreEquipo(partidoSuelto.ganador)}`;
+    // Reusamos el mismo prompt del análisis general pero pidiendo solo un array "r1" de un elemento
+    const promptSistema = t("prompt_sistema");
+    const promptUsuario = t("prompt_usuario", resumen) + "\n\n(Nota: solo hay UN partido en esta predicción, así que en el JSON usa \"r1\":[n1] con un solo número, y deja los demás arrays vacíos: \"r2\":[],\"r3\":[],\"r4\":[],\"r5\":[],\"tercer\":[].)";
+
+    try{
+      const textoCompleto = await llamarIA(promptSistema, promptUsuario);
+      if(!textoCompleto.trim()) throw new Error("Sin contenido");
+
+      const { textoSinJson, probabilidades } = extraerProbabilidades(textoCompleto);
+      if(probabilidades && Array.isArray(probabilidades.r1) && typeof probabilidades.r1[0] === "number"){
+        partidoSuelto.probabilidad = Math.max(1, Math.min(99, Math.round(probabilidades.r1[0])));
+      }
+      mostrarResultadoAnalisis(markdownASimpleHTML(textoSinJson));
+      // Al cerrar el modal se debe re-renderizar el partido suelto con color; usamos la misma bandera huboAnalisis
+      huboAnalisis = true;
+      modoAnalisisActivo = "suelto";
+    }catch(err){
+      console.error("Error en análisis de partido suelto:", err);
+      mostrarErrorAnalisis();
+    }finally{
+      btn.disabled = false;
+      spinner.classList.remove("show");
+      tiempoEspera.style.display = "none";
+      textoBtn.textContent = t("btn_analizar");
+    }
+  }
+
+  function contarDefinidos(){
+    let n=0;
+    estado.r1.forEach(p=>{ if(p.ganador) n++; });
+    estado.r2.forEach(p=>{ if(p.ganador) n++; });
+    estado.r3.forEach(p=>{ if(p.ganador) n++; });
+    estado.r4.forEach(p=>{ if(p.ganador) n++; });
+    if(estado.r5.ganador) n++;
+    if(estado.tercer.ganador) n++;
+    return n;
+  }
+
+  function render(){
+    const grid = document.getElementById("grid-bracket");
+    grid.innerHTML = "";
+
+    const colDefs = [
+      { titulo:t("tit_dieciseisavos"), partidos: estado.r1.slice(0,8) },
+      { titulo:t("tit_octavos"),       partidos: estado.r2.slice(0,4) },
+      { titulo:t("tit_cuartos"),       partidos: estado.r3.slice(0,2) },
+      { titulo:t("tit_semis"),         partidos: estado.r4.slice(0,1) },
+      { titulo:"",              especial:"final" },
+      { titulo:t("tit_semis"),         partidos: estado.r4.slice(1,2) },
+      { titulo:t("tit_cuartos"),       partidos: estado.r3.slice(2,4) },
+      { titulo:t("tit_octavos"),       partidos: estado.r2.slice(4,8) },
+      { titulo:t("tit_dieciseisavos"), partidos: estado.r1.slice(8,16) },
+    ];
+
+    colDefs.forEach(def=>{
+      const wrap = document.createElement("div");
+      wrap.style.display = "flex";
+      wrap.style.flexDirection = "column";
+      wrap.style.height = "100%";
+
+      const tit = document.createElement("div");
+      tit.className = "col-titulo";
+      tit.textContent = def.titulo;
+      wrap.appendChild(tit);
+
+      if(def.especial === "final"){
+        const zf = document.createElement("div");
+        zf.className = "zona-final";
+
+        const tituloFinal = document.createElement("div");
+        tituloFinal.className = "titulo-final";
+        tituloFinal.textContent = t("titulo_final");
+        zf.appendChild(tituloFinal);
+
+        const par = document.createElement("div");
+        par.className = "par-final";
+        par.appendChild(tarjetaEquipo(estado.r5, estado.r5.a, "a"));
+        par.appendChild(tarjetaEquipo(estado.r5, estado.r5.b, "b"));
+        zf.appendChild(par);
+
+        const trofeo = document.createElement("div");
+        trofeo.className = "trofeo-box";
+        if(estado.r5.ganador){
+          trofeo.innerHTML = `
+            <div class="campeon">
+              <div class="trofeo-emoji">🏆</div>
+              <span class="bandera-campeon">${banderaSvg(estado.r5.ganador.code)}</span>
+              <div class="campeon-nombre">${nombreEquipo(estado.r5.ganador)}</div>
+            </div>`;
+        }
+        zf.appendChild(trofeo);
+
+        wrap.appendChild(zf);
+      } else {
+        wrap.appendChild(columna(def.partidos));
+      }
+
+      grid.appendChild(wrap);
+    });
+
+    // Tercer lugar, ocupando toda la fila inferior
+    const zonaTercer = document.createElement("div");
+    zonaTercer.className = "zona-tercer-lugar";
+    const titTercer = document.createElement("div");
+    titTercer.className = "titulo-tercer";
+    titTercer.textContent = t("titulo_tercer");
+    zonaTercer.appendChild(titTercer);
+    const parTercer = document.createElement("div");
+    parTercer.className = "par-tercer";
+    parTercer.appendChild(tarjetaEquipo(estado.tercer, estado.tercer.a, "a"));
+    parTercer.appendChild(tarjetaEquipo(estado.tercer, estado.tercer.b, "b"));
+    zonaTercer.appendChild(parTercer);
+    if(estado.tercer.ganador){
+      const txt = document.createElement("div");
+      txt.style.fontSize = "0.78rem";
+      txt.style.opacity = "0.75";
+      txt.textContent = `🥉 ${nombreEquipo(estado.tercer.ganador)}`;
+      zonaTercer.appendChild(txt);
+    }
+    grid.appendChild(zonaTercer);
+
+    // Progreso
+    const total = 31; // 16+8+4+2+1 = 31 partidos principales (tercer lugar no cuenta para el avance del torneo)
+    const definidos = Math.min(contarDefinidos() - (estado.tercer.ganador?1:0), total);
+    const pct = Math.round((definidos/total)*100);
+    document.getElementById("barra-fill").style.width = pct+"%";
+    document.getElementById("barra-texto").textContent = t("progreso_texto", definidos, total);
+
+    // Mostrar el botón de análisis solo cuando el bracket principal está completo (los 31, sin contar tercer lugar)
+    const zonaAnalisis = document.getElementById("zona-analisis");
+    zonaAnalisis.style.display = (definidos === total) ? "flex" : "none";
+  }
+
+  function mostrarToastUI(texto){
+    const elToast = document.getElementById("toast");
+    elToast.textContent = texto;
+    elToast.classList.add("show");
+    setTimeout(()=> elToast.classList.remove("show"), 1600);
+  }
+
+  // ---------- NAVEGACIÓN ENTRE PANTALLAS ----------
+  function irABracket(){
+    document.getElementById("pantalla-inicio").style.display = "none";
+    document.getElementById("pantalla-partido-suelto").style.display = "none";
+    document.getElementById("pantalla-bracket").style.display = "block";
+    render();
+  }
+  function irAInicio(){
+    document.getElementById("pantalla-bracket").style.display = "none";
+    document.getElementById("pantalla-partido-suelto").style.display = "none";
+    document.getElementById("pantalla-inicio").style.display = "flex";
+    actualizarPantallaInicio();
+  }
+
+  async function actualizarPantallaInicio(){
+    const tieneGuardado = await hayGuardado();
+    document.getElementById("btn-continuar").style.display = tieneGuardado ? "block" : "none";
+    document.getElementById("estado-guardado").textContent = tieneGuardado
+      ? t("estado_guardado_si")
+      : t("estado_guardado_no");
+  }
+
+  // ---------- EVENTOS ----------
+  document.getElementById("btn-nueva").addEventListener("click", async ()=>{
+    estado = construirEstadoInicial();
+    huboAnalisis = false;
+    await guardarEstado(false);
+    irABracket();
+  });
+
+  document.getElementById("btn-continuar").addEventListener("click", async ()=>{
+    await cargarGuardado();
+    huboAnalisis = !!(estado.r5 && typeof estado.r5.probabilidad === "number") || estado.r1.some(p=>typeof p.probabilidad === "number");
+    irABracket();
+  });
+
+  document.getElementById("btn-inicio").addEventListener("click", irAInicio);
+
+  document.getElementById("btn-partido-suelto").addEventListener("click", irAPartidoSuelto);
+  document.getElementById("btn-inicio-desde-suelto").addEventListener("click", irAInicio);
+
+  document.getElementById("btn-confirmar-partido-suelto").addEventListener("click", ()=>{
+    const idxA = parseInt(document.getElementById("select-equipo-a").value, 10);
+    const idxB = parseInt(document.getElementById("select-equipo-b").value, 10);
+    if(idxA === idxB){
+      mostrarToastUI(t("error_mismo_equipo"));
+      return;
+    }
+    partidoSuelto.a = EQUIPOS_FINAL[idxA];
+    partidoSuelto.b = EQUIPOS_FINAL[idxB];
+    partidoSuelto.ganador = null;
+    partidoSuelto.probabilidad = null;
+    document.getElementById("selector-partido-suelto").style.display = "none";
+    document.getElementById("resultado-partido-suelto").style.display = "flex";
+    renderPartidoSuelto();
+  });
+
+  document.getElementById("btn-otro-partido-suelto").addEventListener("click", ()=>{
+    partidoSuelto = { a: null, b: null, ganador: null, probabilidad: null };
+    document.getElementById("selector-partido-suelto").style.display = "flex";
+    document.getElementById("resultado-partido-suelto").style.display = "none";
+    llenarSelectsPartidoSuelto();
+  });
+
+  document.getElementById("btn-analizar-suelto").addEventListener("click", analizarPartidoSuelto);
+
+  document.getElementById("btn-actualidad").addEventListener("click", buscarActualidad);
+  document.getElementById("modal-resultados-si").addEventListener("click", ()=>{
+    mostrarMarcadores = true;
+    document.getElementById("modal-resultados").classList.remove("show");
+    render();
+  });
+  document.getElementById("modal-resultados-no").addEventListener("click", ()=>{
+    mostrarMarcadores = false;
+    document.getElementById("modal-resultados").classList.remove("show");
+    render();
+  });
+
+  document.getElementById("selector-idioma-suelto").addEventListener("change", (e)=>{
+    cambiarIdioma(e.target.value);
+    llenarSelectsPartidoSuelto();
+    if(partidoSuelto.a) renderPartidoSuelto();
+  });
+
+  document.getElementById("btn-reiniciar").addEventListener("click", ()=>{
+    document.getElementById("modal-reiniciar").classList.add("show");
+  });
+  document.getElementById("modal-cancelar").addEventListener("click", ()=>{
+    document.getElementById("modal-reiniciar").classList.remove("show");
+  });
+  document.getElementById("modal-confirmar").addEventListener("click", async ()=>{
+    estado = construirEstadoInicial();
+    huboAnalisis = false;
+    await guardarEstado(false);
+    document.getElementById("modal-reiniciar").classList.remove("show");
+    render();
+    mostrarToastUI(t("toast_reiniciado"));
+  });
+
+  // ---------- ANÁLISIS CON IA (web search incluido) ----------
+
+  function describirBracket(){
+    // Construye un resumen legible de toda la predicción para mandarlo al modelo
+    const lineas = [];
+    lineas.push("DIECISEISAVOS DE FINAL:");
+    estado.r1.forEach((p,i)=>{
+      lineas.push(`${i+1}. ${p.a.nombre} vs ${p.b.nombre} -> ganador elegido: ${p.ganador ? p.ganador.nombre : "(sin elegir)"}`);
+    });
+    lineas.push("\nOCTAVOS DE FINAL:");
+    estado.r2.forEach((p,i)=>{
+      lineas.push(`${i+1}. ${p.a?p.a.nombre:"?"} vs ${p.b?p.b.nombre:"?"} -> ganador elegido: ${p.ganador ? p.ganador.nombre : "(sin elegir)"}`);
+    });
+    lineas.push("\nCUARTOS DE FINAL:");
+    estado.r3.forEach((p,i)=>{
+      lineas.push(`${i+1}. ${p.a?p.a.nombre:"?"} vs ${p.b?p.b.nombre:"?"} -> ganador elegido: ${p.ganador ? p.ganador.nombre : "(sin elegir)"}`);
+    });
+    lineas.push("\nSEMIFINALES:");
+    estado.r4.forEach((p,i)=>{
+      lineas.push(`${i+1}. ${p.a?p.a.nombre:"?"} vs ${p.b?p.b.nombre:"?"} -> ganador elegido: ${p.ganador ? p.ganador.nombre : "(sin elegir)"}`);
+    });
+    lineas.push(`\nFINAL: ${estado.r5.a?estado.r5.a.nombre:"?"} vs ${estado.r5.b?estado.r5.b.nombre:"?"} -> CAMPEÓN ELEGIDO: ${estado.r5.ganador ? estado.r5.ganador.nombre : "(sin elegir)"}`);
+    if(estado.tercer.ganador){
+      lineas.push(`TERCER LUGAR: ${estado.tercer.a.nombre} vs ${estado.tercer.b.nombre} -> elegido: ${estado.tercer.ganador.nombre}`);
+    }
+    return lineas.join("\n");
+  }
+
+  // Conversor minimalista de markdown (negritas, encabezados ###, listas -) a HTML
+  function markdownASimpleHTML(md){
+    const lineasOut = [];
+    let dentroLista = false;
+    md.split("\n").forEach(linea=>{
+      const l = linea.trim();
+      if(l.startsWith("### ") || l.startsWith("## ") || l.startsWith("# ")){
+        if(dentroLista){ lineasOut.push("</ul>"); dentroLista=false; }
+        const texto = l.replace(/^#{1,3}\s*/, "");
+        lineasOut.push(`<h4>${texto}</h4>`);
+      } else if(l.startsWith("- ") || l.startsWith("* ")){
+        if(!dentroLista){ lineasOut.push("<ul>"); dentroLista=true; }
+        lineasOut.push(`<li>${l.slice(2)}</li>`);
+      } else if(l === ""){
+        if(dentroLista){ lineasOut.push("</ul>"); dentroLista=false; }
+      } else {
+        if(dentroLista){ lineasOut.push("</ul>"); dentroLista=false; }
+        lineasOut.push(`<p>${l}</p>`);
+      }
+    });
+    if(dentroLista) lineasOut.push("</ul>");
+    let html = lineasOut.join("\n");
+    html = html.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+    return html;
+  }
+
+  async function analizarPrediccion(){
+    const btn = document.getElementById("btn-analizar");
+    const spinner = document.getElementById("spinner-analizar");
+    const textoBtn = document.getElementById("texto-btn-analizar");
+    const tiempoEspera = document.getElementById("tiempo-espera-analizar");
+
+    btn.disabled = true;
+    spinner.classList.add("show");
+    textoBtn.textContent = t("btn_analizar_cargando");
+    tiempoEspera.textContent = t("tiempo_espera");
+    tiempoEspera.style.display = "block";
+
+    const resumen = describirBracket();
+    const promptSistema = t("prompt_sistema");
+    const promptUsuario = t("prompt_usuario", resumen);
+
+    try{
+      const textoCompleto = await llamarIA(promptSistema, promptUsuario);
+
+      if(!textoCompleto.trim()){
+        throw new Error("La IA no devolvió contenido de texto.");
+      }
+
+      // Extraer el bloque de probabilidades JSON y separarlo del texto visible
+      const { textoSinJson, probabilidades } = extraerProbabilidades(textoCompleto);
+
+      if(probabilidades) aplicarProbabilidades(probabilidades);
+
+      mostrarResultadoAnalisis(markdownASimpleHTML(textoSinJson));
+
+    } catch(err){
+      console.error("Error en análisis:", err);
+      mostrarErrorAnalisis();
+    } finally {
+      btn.disabled = false;
+      spinner.classList.remove("show");
+      tiempoEspera.style.display = "none";
+      textoBtn.textContent = t("btn_analizar");
+    }
+  }
+
+  // ---------- LLAMADA A LA IA (detecta automáticamente el entorno) ----------
+  // Si este archivo está desplegado en tu propio hosting (Vercel) con la función
+  // /api/analizar configurada, la usamos (esconde tu key de Gemini).
+  // Si no existe esa ruta (por ejemplo, estás viendo este artifact aquí en el chat
+  // de Claude), usamos la API de Anthropic directamente, que funciona sin llave
+  // dentro de este entorno de chat.
+  async function llamarIA(promptSistema, promptUsuario){
+    // Intento 1: backend propio (Vercel + Gemini)
+    try{
+      const respBackend = await fetch("/api/analizar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ promptSistema, promptUsuario })
+      });
+
+      if(respBackend.ok){
+        const data = await respBackend.json();
+        if(data && data.texto) return data.texto;
+      }
+      // Si la ruta no existe (404) o falla, caemos al intento 2 sin tronar.
+    }catch(e){
+      // Conexión rechazada, ruta no existente, etc. -> probamos el otro camino.
+    }
+
+    // Intento 2: API de Anthropic directa (funciona dentro del chat de Claude)
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6",
+        max_tokens: 1500,
+        system: promptSistema,
+        messages: [
+          { role: "user", content: promptUsuario }
+        ],
+        tools: [
+          { type: "web_search_20250305", name: "web_search" }
+        ]
+      })
+    });
+
+    if(!response.ok){
+      throw new Error(`Error de API: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const texto = (data.content || [])
+      .filter(item => item.type === "text")
+      .map(item => item.text)
+      .join("\n\n");
+
+    return texto;
+  }
+
+  function extraerProbabilidades(textoCompleto){
+    const regex = /\[\[\[JSON_PROBABILIDADES\]\]\]([\s\S]*?)\[\[\[FIN_JSON_PROBABILIDADES\]\]\]/;
+    const match = textoCompleto.match(regex);
+    if(!match) return { textoSinJson: textoCompleto, probabilidades: null };
+
+    const textoSinJson = textoCompleto.replace(regex, "").trim();
+    try{
+      const json = JSON.parse(match[1].trim());
+      return { textoSinJson, probabilidades: json };
+    }catch(e){
+      console.error("No se pudo parsear el JSON de probabilidades:", e);
+      return { textoSinJson, probabilidades: null };
+    }
+  }
+
+  function aplicarProbabilidades(probs){
+    function asignar(arrEstado, arrProbs){
+      if(!Array.isArray(arrProbs)) return;
+      arrEstado.forEach((p,i)=>{
+        if(p.ganador && typeof arrProbs[i] === "number"){
+          p.probabilidad = Math.max(1, Math.min(99, Math.round(arrProbs[i])));
+        }
+      });
+    }
+    asignar(estado.r1, probs.r1);
+    asignar(estado.r2, probs.r2);
+    asignar(estado.r3, probs.r3);
+    asignar(estado.r4, probs.r4);
+    if(estado.r5.ganador && Array.isArray(probs.r5) && typeof probs.r5[0] === "number"){
+      estado.r5.probabilidad = Math.max(1, Math.min(99, Math.round(probs.r5[0])));
+    }
+    if(estado.tercer.ganador && Array.isArray(probs.tercer) && typeof probs.tercer[0] === "number"){
+      estado.tercer.probabilidad = Math.max(1, Math.min(99, Math.round(probs.tercer[0])));
+    }
+    huboAnalisis = true;
+    guardarConDebounce();
+  }
+
+  // ---------- ACTUALIDAD: buscar resultados reales del Mundial en curso ----------
+  function extraerResultadosReales(textoCompleto){
+    const regex = /\[\[\[JSON_RESULTADOS\]\]\]([\s\S]*?)\[\[\[FIN_JSON_RESULTADOS\]\]\]/;
+    const match = textoCompleto.match(regex);
+    const textoBuscar = match ? match[1] : textoCompleto; // a veces el modelo responde solo el JSON, sin texto extra
+    try{
+      const json = JSON.parse(textoBuscar.trim());
+      return json;
+    }catch(e){
+      console.error("No se pudo parsear JSON de resultados reales:", e, textoBuscar);
+      return null;
+    }
+  }
+
+  async function buscarActualidad(){
+    const btn = document.getElementById("btn-actualidad");
+    const textoOriginal = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = t("btn_actualidad_cargando");
+
+    const lista = estado.r1.map((p,i)=> `${i}. ${nombreEquipo(p.a)} (${p.a.code}) vs ${nombreEquipo(p.b)} (${p.b.code})`).join("\n");
+    const promptSistema = t("prompt_sistema_actualidad");
+    const promptUsuario = t("prompt_usuario_actualidad", lista);
+
+    try{
+      const textoCompleto = await llamarIA(promptSistema, promptUsuario);
+      const json = extraerResultadosReales(textoCompleto);
+
+      if(!json || !Array.isArray(json.resultados)){
+        throw new Error("Respuesta sin resultados válidos");
+      }
+
+      aplicarResultadosReales(json.resultados);
+
+      if(json.resultados.length > 0){
+        document.getElementById("modal-resultados").classList.add("show");
+      } else {
+        mostrarToastUI(t("estado_guardado_no")); // fallback simple, no hay partidos jugados aún
+      }
+
+      render();
+
+    }catch(err){
+      console.error("Error buscando actualidad:", err);
+      mostrarToastUI(t("error_actualidad"));
+    }finally{
+      btn.disabled = false;
+      btn.textContent = textoOriginal;
+    }
+  }
+
+  function aplicarResultadosReales(resultados){
+    resultados.forEach(r=>{
+      if(typeof r.r1_index !== "number" || !r.ganador_code) return;
+      const partido = estado.r1[r.r1_index];
+      if(!partido) return;
+
+      const equipoGanadorReal = (equipoIgual(partido.a, {code:r.ganador_code, nombre:""}) ) ? partido.a
+        : (partido.a && partido.a.code === r.ganador_code) ? partido.a
+        : (partido.b && partido.b.code === r.ganador_code) ? partido.b
+        : null;
+      if(!equipoGanadorReal) return;
+
+      // Guardamos el resultado real (independiente de lo que el usuario haya elegido)
+      estado.resultadosReales["r1_" + r.r1_index] = {
+        ganador_code: r.ganador_code,
+        marcador: r.marcador || ""
+      };
+
+      // Si el usuario no había elegido ganador en ese partido, se lo asignamos automáticamente con el resultado real
+      if(!partido.ganador){
+        partido.ganador = equipoGanadorReal;
+        delete partido.probabilidad;
+      }
+    });
+    propagar();
+    guardarConDebounce();
+  }
+
+  function mostrarResultadoAnalisis(htmlContenido){
+    const cont = document.getElementById("contenido-analisis");
+    cont.innerHTML = `<div class="analisis-contenido">${htmlContenido}</div>`;
+    document.getElementById("modal-analisis").classList.add("show");
+  }
+
+  function mostrarErrorAnalisis(){
+    const cont = document.getElementById("contenido-analisis");
+    cont.innerHTML = `
+      <div class="analisis-error">
+        No se pudo generar el análisis en este momento. Puede ser un problema de conexión o del servicio.
+        Intenta de nuevo en unos segundos.
+      </div>`;
+    document.getElementById("modal-analisis").classList.add("show");
+  }
+
+  document.getElementById("btn-analizar").addEventListener("click", ()=>{ modoAnalisisActivo = "bracket"; analizarPrediccion(); });
+  document.getElementById("cerrar-modal-analisis").addEventListener("click", ()=>{
+    document.getElementById("modal-analisis").classList.remove("show");
+    if(huboAnalisis){
+      if(modoAnalisisActivo === "suelto") renderPartidoSuelto();
+      else render();
+    }
+  });
+  document.getElementById("modal-analisis").addEventListener("click", (e)=>{
+    if(e.target.id === "modal-analisis"){
+      document.getElementById("modal-analisis").classList.remove("show");
+      if(huboAnalisis){
+        if(modoAnalisisActivo === "suelto") renderPartidoSuelto();
+        else render();
+      }
+    }
+  });
+
+  document.getElementById("selector-idioma-inicio").addEventListener("change", (e)=> cambiarIdioma(e.target.value));
+  document.getElementById("selector-idioma-bracket").addEventListener("change", (e)=> cambiarIdioma(e.target.value));
+
+  // ---------- INICIO ----------
+  cargarIdiomaGuardado().then(()=>{
+    actualizarPantallaInicio();
+  });
+
+})();
+</script>
+</body>
+</html>

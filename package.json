@@ -1,0 +1,6 @@
+{
+  "name": "mundial-predictor",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Predictor del Mundial 2026 con análisis de IA (Gemini)"
+}
