@@ -952,14 +952,14 @@
 
 Da un análisis honesto pero amable, sin asegurar resultados futuros (deja claro que el fútbol es impredecible). Estructura tu respuesta en markdown simple con: una sección "### Resumen general" (2-3 líneas), una sección "### Lo más sólido de tu predicción" (lista de 2-4 puntos), una sección "### Las apuestas más arriesgadas" (lista de 2-4 puntos), y una sección final "### Tu campeón" comentando qué tan viable es tu campeón elegido. Sé conciso, no más de 300 palabras.
 
-MUY IMPORTANTE: al final de tu respuesta, agrega un bloque delimitado EXACTAMENTE así, sin nada más adentro que un JSON válido (sin comentarios, sin texto extra), con un porcentaje de probabilidad de 1 a 99 para CADA UNO de los 32 partidos que te paso (incluyendo el de tercer lugar), evaluando qué tan probable es, según los datos que encontraste, que el equipo que el usuario eligió como ganador realmente gane ese partido específico:
+INSTRUCCIÓN OBLIGATORIA: Al terminar tu análisis de texto, debes agregar EXACTAMENTE el siguiente bloque JSON con las probabilidades reales. NO dejes los arrays vacíos. Rellena CADA número con tu estimación de probabilidad (entre 1 y 99) de que el equipo elegido por el usuario gane ese partido. El orden de los números debe coincidir exactamente con el orden de los partidos que te doy.
 
 [[[JSON_PROBABILIDADES]]]
-{"r1":[n1,n2,...,n16],"r2":[n1,...,n8],"r3":[n1,...,n4],"r4":[n1,n2],"r5":[n1],"tercer":[n1]}
+{"r1":[75,45,80,30,60,55,70,40,65,50,72,38,68,42,58,62],"r2":[60,55,65,50,58,62,70,45],"r3":[65,55,60,70],"r4":[55,60],"r5":[52],"tercer":[58]}
 [[[FIN_JSON_PROBABILIDADES]]]
 
-Cada array debe tener exactamente el número de partidos de esa ronda, en el mismo orden en que te los doy. Usa números enteros del 1 al 99.`,
-      prompt_usuario: (resumen)=> `Aquí está mi predicción completa del bracket del Mundial 2026:\n\n${resumen}\n\nAnaliza qué tan realista está, basándote en datos actuales que puedas buscar, y no olvides el bloque JSON de probabilidades al final.`,
+IMPORTANTE: Los números de arriba son SOLO UN EJEMPLO. Debes reemplazarlos con tus propias estimaciones reales basadas en el análisis. Cada array debe tener exactamente: r1=16 números, r2=8 números, r3=4 números, r4=2 números, r5=1 número, tercer=1 número.`,
+      prompt_usuario: (resumen)=> `Aquí está mi predicción completa del bracket del Mundial 2026:\n\n${resumen}\n\nAnaliza qué tan realista está, basándote en datos actuales que puedas buscar. RECUERDA: al final debes incluir el bloque JSON de probabilidades con números reales (no vacío).`,
 
       btn_partido_suelto: "🔍 Adivinar partido en específico",
       titulo_partido_suelto: "🔍 Adivinar partido en específico",
@@ -1025,14 +1025,14 @@ r1_index es la posición del partido en la lista que te doy (empezando en 0). ga
 
 Give an honest but friendly analysis, without guaranteeing future results (make clear football is unpredictable). Structure your answer in simple markdown with: a "### General summary" section (2-3 lines), a "### Strongest parts of your prediction" section (list of 2-4 points), a "### Riskiest picks" section (list of 2-4 points), and a final "### Your champion" section commenting on how viable the chosen champion is. Be concise, no more than 300 words.
 
-VERY IMPORTANT: at the end of your answer, add a block delimited EXACTLY like this, with nothing inside except valid JSON (no comments, no extra text), with a probability percentage from 1 to 99 for EACH of the 32 matches passed to you (including the third place match), evaluating how likely it is, based on the data you found, that the team the user picked as winner will actually win that specific match:
+MANDATORY INSTRUCTION: After your text analysis, you MUST add EXACTLY the following JSON block with real probabilities. Do NOT leave the arrays empty. Fill EACH number with your estimated probability (between 1 and 99) that the user's chosen team wins that specific match. The order of numbers must match the order of matches given to you.
 
 [[[JSON_PROBABILIDADES]]]
-{"r1":[n1,n2,...,n16],"r2":[n1,...,n8],"r3":[n1,...,n4],"r4":[n1,n2],"r5":[n1],"tercer":[n1]}
+{"r1":[75,45,80,30,60,55,70,40,65,50,72,38,68,42,58,62],"r2":[60,55,65,50,58,62,70,45],"r3":[65,55,60,70],"r4":[55,60],"r5":[52],"tercer":[58]}
 [[[FIN_JSON_PROBABILIDADES]]]
 
-Each array must have exactly the number of matches in that round, in the same order given to you. Use whole numbers from 1 to 99.`,
-      prompt_usuario: (resumen)=> `Here is my complete World Cup 2026 bracket prediction:\n\n${resumen}\n\nAnalyze how realistic it is, based on current data you can search for, and don't forget the JSON probabilities block at the end.`,
+IMPORTANT: The numbers above are JUST AN EXAMPLE. Replace them with your own real estimates. Each array must have exactly: r1=16 numbers, r2=8 numbers, r3=4 numbers, r4=2 numbers, r5=1 number, tercer=1 number.`,
+      prompt_usuario: (resumen)=> `Here is my complete World Cup 2026 bracket prediction:\n\n${resumen}\n\nAnalyze how realistic it is, based on current data you can search for. REMEMBER: at the end you must include the JSON probabilities block with real numbers (not empty).`,
 
       btn_partido_suelto: "🔍 Predict a specific match",
       titulo_partido_suelto: "🔍 Predict a specific match",
@@ -1098,14 +1098,14 @@ r1_index is the position of the match in the list given to you (starting at 0). 
 
 Donne une analyse honnête mais amicale, sans garantir de résultats futurs (précise que le football est imprévisible). Structure ta réponse en markdown simple avec : une section "### Résumé général" (2-3 lignes), une section "### Les points les plus solides de ton pronostic" (liste de 2-4 points), une section "### Les choix les plus risqués" (liste de 2-4 points), et une section finale "### Ton champion" commentant la viabilité du champion choisi. Sois concis, pas plus de 300 mots.
 
-TRÈS IMPORTANT : à la fin de ta réponse, ajoute un bloc délimité EXACTEMENT ainsi, sans rien d'autre à l'intérieur qu'un JSON valide (sans commentaires, sans texte supplémentaire), avec un pourcentage de probabilité de 1 à 99 pour CHACUN des 32 matchs fournis (y compris la petite finale), évaluant la probabilité, selon les données trouvées, que l'équipe choisie par l'utilisateur gagne réellement ce match précis :
+INSTRUCTION OBLIGATOIRE : Après ton analyse de texte, tu DOIS ajouter EXACTEMENT le bloc JSON suivant avec de vraies probabilités. Ne laisse PAS les tableaux vides. Remplis CHAQUE nombre avec ton estimation de probabilité (entre 1 et 99) que l'équipe choisie par l'utilisateur gagne ce match précis.
 
 [[[JSON_PROBABILIDADES]]]
-{"r1":[n1,n2,...,n16],"r2":[n1,...,n8],"r3":[n1,...,n4],"r4":[n1,n2],"r5":[n1],"tercer":[n1]}
+{"r1":[75,45,80,30,60,55,70,40,65,50,72,38,68,42,58,62],"r2":[60,55,65,50,58,62,70,45],"r3":[65,55,60,70],"r4":[55,60],"r5":[52],"tercer":[58]}
 [[[FIN_JSON_PROBABILIDADES]]]
 
-Chaque tableau doit avoir exactement le nombre de matchs de ce tour, dans le même ordre que celui fourni. Utilise des nombres entiers de 1 à 99.`,
-      prompt_usuario: (resumen)=> `Voici mon pronostic complet du tableau de la Coupe du Monde 2026 :\n\n${resumen}\n\nAnalyse à quel point il est réaliste, en te basant sur des données actuelles que tu peux rechercher, et n'oublie pas le bloc JSON de probabilités à la fin.`,
+IMPORTANT : Les nombres ci-dessus sont JUSTE UN EXEMPLE. Remplace-les par tes propres estimations réelles. r1=16 nombres, r2=8, r3=4, r4=2, r5=1, tercer=1.`,
+      prompt_usuario: (resumen)=> `Voici mon pronostic complet du tableau de la Coupe du Monde 2026 :\n\n${resumen}\n\nAnalyse à quel point il est réaliste. N'OUBLIE PAS : tu dois inclure le bloc JSON de probabilités avec de vrais nombres (pas vide) à la fin.`,
 
       btn_partido_suelto: "🔍 Deviner un match en particulier",
       titulo_partido_suelto: "🔍 Deviner un match en particulier",
@@ -1171,14 +1171,14 @@ r1_index est la position du match dans la liste fournie (en commençant à 0). g
 
 Dê uma análise honesta mas amigável, sem garantir resultados futuros (deixe claro que o futebol é imprevisível). Estruture sua resposta em markdown simples com: uma seção "### Resumo geral" (2-3 linhas), uma seção "### Os pontos mais sólidos da sua predição" (lista de 2-4 pontos), uma seção "### As apostas mais arriscadas" (lista de 2-4 pontos), e uma seção final "### Seu campeão" comentando a viabilidade do campeão escolhido. Seja conciso, no máximo 300 palavras.
 
-MUITO IMPORTANTE: ao final da sua resposta, adicione um bloco delimitado EXATAMENTE assim, sem nada além de um JSON válido (sem comentários, sem texto extra), com uma porcentagem de probabilidade de 1 a 99 para CADA uma das 32 partidas fornecidas (incluindo a disputa de terceiro lugar), avaliando o quão provável é, com base nos dados encontrados, que o time escolhido pelo usuário realmente vença essa partida específica:
+INSTRUÇÃO OBRIGATÓRIA: Após sua análise de texto, você DEVE adicionar EXATAMENTE o bloco JSON abaixo com probabilidades reais. NÃO deixe os arrays vazios. Preencha CADA número com sua estimativa de probabilidade (entre 1 e 99) de que o time escolhido pelo usuário vença aquela partida.
 
 [[[JSON_PROBABILIDADES]]]
-{"r1":[n1,n2,...,n16],"r2":[n1,...,n8],"r3":[n1,...,n4],"r4":[n1,n2],"r5":[n1],"tercer":[n1]}
+{"r1":[75,45,80,30,60,55,70,40,65,50,72,38,68,42,58,62],"r2":[60,55,65,50,58,62,70,45],"r3":[65,55,60,70],"r4":[55,60],"r5":[52],"tercer":[58]}
 [[[FIN_JSON_PROBABILIDADES]]]
 
-Cada array deve ter exatamente o número de partidas dessa rodada, na mesma ordem fornecida. Use números inteiros de 1 a 99.`,
-      prompt_usuario: (resumen)=> `Aqui está minha predição completa do chaveamento da Copa do Mundo 2026:\n\n${resumen}\n\nAnalise o quão realista ela é, com base em dados atuais que você possa buscar, e não se esqueça do bloco JSON de probabilidades ao final.`,
+IMPORTANTE: Os números acima são APENAS UM EXEMPLO. Substitua-os pelas suas próprias estimativas reais. r1=16 números, r2=8, r3=4, r4=2, r5=1, tercer=1.`,
+      prompt_usuario: (resumen)=> `Aqui está minha predição completa do chaveamento da Copa do Mundo 2026:\n\n${resumen}\n\nAnalise o quão realista ela é. LEMBRE-SE: ao final você deve incluir o bloco JSON de probabilidades com números reais (não vazio).`,
 
       btn_partido_suelto: "🔍 Adivinhar uma partida específica",
       titulo_partido_suelto: "🔍 Adivinhar uma partida específica",
@@ -1244,14 +1244,14 @@ r1_index é a posição da partida na lista fornecida (começando em 0). ganador
 
 Gib eine ehrliche, aber freundliche Analyse ab, ohne zukünftige Ergebnisse zu garantieren (mache klar, dass Fußball unvorhersehbar ist). Strukturiere deine Antwort in einfachem Markdown mit: einem Abschnitt "### Allgemeine Zusammenfassung" (2-3 Zeilen), einem Abschnitt "### Die stärksten Teile deiner Vorhersage" (Liste mit 2-4 Punkten), einem Abschnitt "### Die riskantesten Tipps" (Liste mit 2-4 Punkten), und einem abschließenden Abschnitt "### Dein Champion", der kommentiert, wie realistisch der gewählte Champion ist. Sei prägnant, nicht mehr als 300 Wörter.
 
-SEHR WICHTIG: Füge am Ende deiner Antwort einen Block hinzu, der GENAU so begrenzt ist, mit nichts anderem darin als gültigem JSON (keine Kommentare, kein zusätzlicher Text), mit einer Wahrscheinlichkeit von 1 bis 99 für JEDES der 32 übergebenen Spiele (einschließlich des Spiels um Platz 3), die bewertet, wie wahrscheinlich es laut den gefundenen Daten ist, dass die vom Nutzer als Sieger gewählte Mannschaft dieses konkrete Spiel tatsächlich gewinnt:
+PFLICHTANWEISUNG: Nach deiner Textanalyse MUSST du GENAU den folgenden JSON-Block mit echten Wahrscheinlichkeiten hinzufügen. Lass die Arrays NICHT leer. Fülle JEDE Zahl mit deiner geschätzten Wahrscheinlichkeit (zwischen 1 und 99) aus, dass das vom Nutzer gewählte Team dieses Spiel gewinnt.
 
 [[[JSON_PROBABILIDADES]]]
-{"r1":[n1,n2,...,n16],"r2":[n1,...,n8],"r3":[n1,...,n4],"r4":[n1,n2],"r5":[n1],"tercer":[n1]}
+{"r1":[75,45,80,30,60,55,70,40,65,50,72,38,68,42,58,62],"r2":[60,55,65,50,58,62,70,45],"r3":[65,55,60,70],"r4":[55,60],"r5":[52],"tercer":[58]}
 [[[FIN_JSON_PROBABILIDADES]]]
 
-Jedes Array muss genau die Anzahl der Spiele dieser Runde haben, in derselben Reihenfolge wie übergeben. Verwende ganze Zahlen von 1 bis 99.`,
-      prompt_usuario: (resumen)=> `Hier ist meine vollständige WM-2026-Turnierraster-Vorhersage:\n\n${resumen}\n\nAnalysiere, wie realistisch sie ist, basierend auf aktuellen Daten, die du suchen kannst, und vergiss den JSON-Wahrscheinlichkeitsblock am Ende nicht.`,
+WICHTIG: Die obigen Zahlen sind NUR EIN BEISPIEL. Ersetze sie durch deine eigenen Schätzungen. r1=16 Zahlen, r2=8, r3=4, r4=2, r5=1, tercer=1.`,
+      prompt_usuario: (resumen)=> `Hier ist meine vollständige WM-2026-Turnierraster-Vorhersage:\n\n${resumen}\n\nAnalysiere, wie realistisch sie ist. DENKE DARAN: Am Ende musst du den JSON-Wahrscheinlichkeitsblock mit echten Zahlen (nicht leer) einfügen.`,
 
       btn_partido_suelto: "🔍 Ein bestimmtes Spiel tippen",
       titulo_partido_suelto: "🔍 Ein bestimmtes Spiel tippen",
